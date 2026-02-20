@@ -1,0 +1,54 @@
+# this file is used for CI action (Continuous Integration) to make sure everything works before 
+# merging to main for production
+name: CI Build
+
+
+on:
+  pull_request:
+    branches: [main]
+  # add your own branch to push if you want to test out your branch
+  push:
+    branches: [main, mike]
+
+jobs:
+  test-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
+      - name: Run Backend Tests
+        working-directory: ./aetherxmlbridge
+        run: ./mvnw test
+
+# could add npm test -- --run (if have time to add frontend tests)
+  test-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install and Test Frontend
+        working-directory: ./frontend
+        run: |
+          npm install
+          npm run build
+
+
+  docker-build:
+    runs-on: ubuntu-latest
+    needs: [test-backend, test-frontend]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Docker Image
+        run: docker build -t aetherxmlbridge .
+          
+          

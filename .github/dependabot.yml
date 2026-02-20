@@ -1,0 +1,20 @@
+# this bot will update the dependencies automatically so we don't have to
+version: 2
+updates:
+  # backend: looks in AetherXmlBridge/aetherxmlbridge/pom.xml
+  - package-ecosystem: "maven"
+    directory: "/aetherxmlbridge"
+    schedule:
+      interval: "daily"
+
+  # frontend: looks in AetherXmlBridge/frontend/package.json
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    schedule:
+      interval: "daily"
+
+  # docker: keeps Java/Base images updated
+  - package-ecosystem: "docker"
+    directory: "/aetherxmlbridge"
+    schedule:
+      interval: "monthly"
