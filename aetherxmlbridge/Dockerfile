@@ -4,7 +4,7 @@ WORKDIR /app
 
 # Copy only the pom.xml first to leverage Docker layer caching for dependencies
 COPY pom.xml .
-RUN mvc dependency:go-offline
+RUN mvn dependency:go-offline
 
 # Copy the source code and build the application
 COPY src ./src
