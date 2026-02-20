@@ -5,8 +5,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   build: {
-    // this sends the production build to Spring Boot's static resources
-    outDir: '..aetherxmlbridge/src/main/resources/static',
+    outDir: 'dist',
     emptyOutDir: true, // cleans the folder before each build
   },
   server: {

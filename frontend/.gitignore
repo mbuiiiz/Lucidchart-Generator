@@ -43,3 +43,5 @@ aetherxmlbridge/*.war
 # These are the files Vite generates and puts into Spring Boot
 aetherxmlbridge/src/main/resources/static/index.html
 aetherxmlbridge/src/main/resources/static/assets/
+
+.env
