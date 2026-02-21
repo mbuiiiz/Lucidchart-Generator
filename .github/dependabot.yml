@@ -6,15 +6,27 @@ updates:
     directory: "/aetherxmlbridge"
     schedule:
       interval: "daily"
+    groups:
+      maven-dependencies:
+        patterns:
+          - "*"
 
   # frontend: looks in AetherXmlBridge/frontend/package.json
   - package-ecosystem: "npm"
     directory: "/frontend"
     schedule:
       interval: "daily"
+    groups:
+      npm-dependencies:
+        patterns:
+          - "*"
 
   # docker: keeps Java/Base images updated
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
       interval: "monthly"
+    groups:
+      docker-dependencies:
+        patterns:
+          - "*"
