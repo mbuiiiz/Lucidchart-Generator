@@ -24,7 +24,7 @@ COPY --from=frontend-build /app/frontend/dist ./src/main/resources/static
 RUN mvn clean package -DskipTests -B
 
 # stage 3: running the application
-FROM eclipse-temurin:21-jre-alpine
+FROM eclipse-temurin:25-jre-alpine
 WORKDIR /app
 # copy the build jar file
 COPY --from=build /app/target/aetherxmlbridge-0.0.1-SNAPSHOT.jar app.jar
