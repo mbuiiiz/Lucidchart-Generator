@@ -1,5 +1,5 @@
 # stage 1: build frontend
-FROM node:20-alpine AS frontend-build
+FROM node:25-alpine AS frontend-build
 WORKDIR /app/frontend
 COPY frontend/package*.json ./
 # install dependencies 
@@ -10,7 +10,7 @@ COPY frontend/ ./
 RUN npm run build
 
 # stage 2: build backend
-FROM maven:3.9.6-eclipse-temurin-21-alpine AS build
+FROM maven:3.9.11-eclipse-temurin-25-alpine AS build
 WORKDIR /app
 # copy pom
 COPY aetherxmlbridge/pom.xml .
@@ -24,7 +24,7 @@ COPY --from=frontend-build /app/frontend/dist ./src/main/resources/static
 RUN mvn clean package -DskipTests -B
 
 # stage 3: running the application
-FROM eclipse-temurin:21-jre-alpine
+FROM eclipse-temurin:25-jre-alpine
 WORKDIR /app
 # copy the build jar file
 COPY --from=build /app/target/aetherxmlbridge-0.0.1-SNAPSHOT.jar app.jar
