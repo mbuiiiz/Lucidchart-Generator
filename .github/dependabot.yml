@@ -16,6 +16,11 @@ updates:
     directory: "/frontend"
     schedule:
       interval: "weekly"
+    ignore:
+      - dependency-name: "eslint"
+        versions: [">= 10"]
+      - dependency-name: "@eslint/js"
+        versions: [">= 10"]
     groups:
       npm-dependencies:
         patterns:
@@ -26,6 +31,11 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
+    ignore:
+      - dependency-name: "eclipse-temurin"
+        versions: [">= 22"]
+      - dependency-name: "node"
+        versions: [">= 21"]
     groups:
       docker-dependencies:
         patterns:
