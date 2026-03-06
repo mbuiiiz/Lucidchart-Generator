@@ -11,21 +11,6 @@ updates:
         patterns:
           - "*"
 
-  # frontend: looks in AetherXmlBridge/frontend/package.json
-  - package-ecosystem: "npm"
-    directory: "/frontend"
-    schedule:
-      interval: "weekly"
-    ignore:
-      - dependency-name: "eslint"
-        versions: [">= 10"]
-      - dependency-name: "@eslint/js"
-        versions: [">= 10"]
-    groups:
-      npm-dependencies:
-        patterns:
-          - "*"
-
   # docker: keeps Java/Base images updated
   - package-ecosystem: "docker"
     directory: "/"
