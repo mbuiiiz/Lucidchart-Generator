@@ -1,13 +1,192 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lucidchart Generator</title>
-</head>
-<body>
-    <h1>Lucidchart Generator</h1>
-    <p>Welcome! Please log in to continue.</p>
-    <a th:href="@{/oauth2/authorization/zoho}">Login with Zoho</a>
-</body>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/landing_page.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/siimple-icons/siimple-icons.css" />
+    <title>AetherGen</title>
+  </head>
+
+  <body class="dot-bg min-h-screen">
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-100">
+      <div class="max-w-7xl mx-auto px-8 py-4 flex items-center justify-between">
+        <!-- Logo -->
+        <div class="flex items-center gap-2.5">
+          <div
+            class="w-8 h-8 bg-gray-900 rounded-md flex items-center justify-center text-white font-bold text-sm select-none"
+          >
+            L
+          </div>
+          <span class="text-xl font-semibold text-gray-900">
+            <span class="font-bold">Aether</span><!-- DO NOT REMOVE THIS COMMENT LINE IT IS USEFUL
+            --><span class="font-normal text-gray-500">Gen</span>
+          </span>
+        </div>
+
+        <nav class="flex items-center gap-7">
+          <a href="#" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">
+            How it Works
+          </a>
+          <a href="#" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">
+            Integrations
+          </a>
+          <a
+            href="#"
+            class="text-sm text-gray-500 font-medium px-3 py-1 hover:text-gray-900 transition-colors"
+          >
+            The Microservice
+          </a>
+        </nav>
+
+        <button
+          class="btn btn-sm bg-gray-900 hover:bg-gray-700 text-white border-none rounded-lg px-5 text-sm font-medium shadow-sm"
+        >
+          Temporary
+        </button>
+      </div>
+    </header>
+
+    <!-- Hero -->
+    <main class="max-w-7xl mx-auto px-8 pt-24 pb-20 flex items-center justify-between gap-16">
+      <section class="max-w-[540px]">
+        <article
+          class="inline-flex items-center bg-teal-50 text-teal-700 border border-teal-200 text-xs font-bold tracking-widest uppercase rounded-md px-3 py-1.5 mb-7"
+        >
+          Internal Microservice
+        </article>
+
+        <!-- Headline -->
+        <h1 class="text-[3.4rem] font-extrabold leading-[1.1] tracking-tight mb-6 text-gray-900">
+          Zoho Data to
+          <br />
+          <span class="gradient-text">Diagrams Instantly.</span>
+        </h1>
+
+        <p class="text-gray-500 text-[1.05rem] leading-relaxed mb-9 max-w-[460px]">
+          Stop drawing manually. Lucidchart-Generator processes your Zoho Creator data through
+          advanced LLMs to build structured, accurate diagrams automatically.
+        </p>
+
+        <section class="flex items-center gap-4 mb-5">
+          <button
+            class="btn bg-gray-900 hover:bg-gray-700 text-white border-none rounded-xl px-7 font-semibold shadow-md"
+          >
+            Get Started
+          </button>
+          <button
+            class="btn btn-outline border-gray-300 text-gray-700 hover:bg-gray-50 rounded-xl px-7 font-semibold bg-white/60"
+          >
+            Not Sure What to Put Here
+          </button>
+        </section>
+
+        <p class="text-sm text-gray-400">
+          Designed exclusively for
+          <a href="#" class="text-teal-600 hover:underline"> Aether Automation </a>
+          workflows.
+        </p>
+      </section>
+
+      <!-- Right: Browser Mockup -->
+      <section class="flex-shrink-0 w-[460px] relative">
+        <figure
+          class="absolute -top-12 -right-12 w-80 h-80 bg-teal-200/40 rounded-full blur-3xl pointer-events-none"
+        ></figure>
+
+        <!-- Browser window card -->
+        <figure
+          class="relative bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden"
+        >
+          <figure class="flex items-center gap-1.5 px-4 py-3 bg-gray-50 border-b border-gray-200">
+            <span class="w-3 h-3 rounded-full bg-red-400 inline-block"></span>
+            <span class="w-3 h-3 rounded-full bg-yellow-400 inline-block"></span>
+            <span class="w-3 h-3 rounded-full bg-green-400 inline-block"></span>
+            <figcaption
+              class="ml-3 flex-1 bg-white border border-gray-200 rounded-md text-xs text-gray-400 px-3 py-1 text-center select-none"
+            >
+              http:/we.hope.you.like.our.app
+            </figcaption>
+          </figure>
+
+          <!-- Card body -->
+          <section class="p-6 space-y-4">
+            <div class="flex items-start justify-between">
+              <article>
+                <h3 class="font-bold text-gray-900 text-[0.95rem] leading-snug">
+                  Project Alpha Data
+                </h3>
+                <p class="text-xs text-gray-400 mt-0.5">Source: Zoho Creator</p>
+              </article>
+              <span
+                class="badge bg-green-100 text-green-600 text-xs font-semibold border-none px-3 py-2 rounded-lg"
+              >
+                Active
+              </span>
+            </div>
+
+            <!-- Top mockup modal -->
+            <section class="flex items-center gap-3 bg-gray-50 rounded-xl p-3.5">
+              <figure
+                class="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center flex-shrink-0"
+              >
+                <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+
+
+                </svg>
+              </figure>
+              <figure class="flex-1 space-y-1.5">
+                <figure class="h-2 bg-gray-300 rounded-full w-3/4"></figure>
+                <figure class="h-2 bg-gray-200 rounded-full w-1/2"></figure>
+              </figure>
+              <svg
+                class="w-4 h-4 text-gray-400 flex-shrink-0"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+
+              </svg>
+            </section>
+
+            <!-- Bottom mockup modal -->
+            <section class="flex justify-center py-1">
+              <div
+                class="w-10 h-10 rounded-full bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-400"
+              >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        
+                </svg>
+              </div>
+            </section>
+
+            <section
+              class="flex items-center gap-3 bg-gray-50 rounded-xl p-3.5 border-b-2 border-orange-400"
+            >
+              <div
+                class="w-9 h-9 rounded-lg bg-orange-500 flex items-center justify-center flex-shrink-0"
+              >
+                <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20"></svg>
+              </div>
+
+              <figure class="flex-1 space-y-1.5">
+                <figure class="h-2 bg-gray-300 rounded-full w-3/4"></figure>
+                <figure class="h-2 bg-gray-200 rounded-full w-1/2"></figure>
+              </figure>
+              <span class="text-xs text-gray-500 font-semibold flex-shrink-0"> Generated </span>
+            </section>
+
+          </section>
+        </figure>
+      </section>
+    </main>
+  </body>
 </html>
