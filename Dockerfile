@@ -1,5 +1,5 @@
 # stage 1: build backend
-FROM maven:3.9.6-eclipse-temurin-21-alpine AS build
+FROM maven:3.9.11-eclipse-temurin-25-alpine AS build
 WORKDIR /app
 # copy pom
 COPY aetherxmlbridge/pom.xml .
