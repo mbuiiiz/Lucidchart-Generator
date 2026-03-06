@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&amp;display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="/css/landing_page.css" />
+    <title>AetherGen</title>
+  </head>
+
+  <body class="dot-bg min-h-screen">
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-100">
+      <div class="max-w-7xl mx-auto px-8 py-4 flex items-center justify-between">
+        <!-- Logo -->
+        <div class="flex items-center gap-2.5">
+          <div
+            class="w-8 h-8 bg-gray-900 rounded-md flex items-center justify-center text-white font-bold text-sm select-none"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418" />
+            </svg>
+          </div>
+          <span class="text-xl font-semibold text-gray-900">
+            <span class="font-bold">Aether</span
+            ><!-- DO NOT REMOVE THIS COMMENT LINE IT IS USEFUL
+            --><span class="font-normal text-gray-500">Gen</span>
+          </span>
+        </div>
+
+        <nav class="flex items-center gap-7">
+          <a href="#" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">
+            How it Works
+          </a>
+          <a href="#" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">
+            Integrations
+          </a>
+          <a
+            href="#"
+            class="text-sm text-gray-500 font-medium px-3 py-1 hover:text-gray-900 transition-colors"
+          >
+            The Microservice
+          </a>
+        </nav>
+
+        <button
+          class="btn btn-sm bg-gray-900 hover:bg-gray-700 text-white border-none rounded-lg px-5 text-sm font-medium shadow-sm"
+        >
+          Temporary
+        </button>
+      </div>
+    </header>
+
+    <!-- Hero -->
+    <main class="max-w-7xl mx-auto px-8 pt-24 pb-20 flex items-center justify-between gap-16">
+      <section class="max-w-[540px]">
+        <article
+          class="inline-flex items-center bg-teal-50 text-teal-700 border border-teal-200 text-xs font-bold tracking-widest uppercase rounded-md px-3 py-1.5 mb-7"
+        >
+          Internal Microservice
+        </article>
+
+        <!-- Headline -->
+        <h1 class="text-[3.4rem] font-extrabold leading-[1.1] tracking-tight mb-6 text-gray-900">
+          Zoho Data to
+          <br />
+          <span class="gradient-text">Diagrams Instantly.</span>
+        </h1>
+
+        <p class="text-gray-500 text-[1.05rem] leading-relaxed mb-9 max-w-[460px]">
+          Stop drawing manually. AetherGen processes your Zoho Creator data through advanced LLMs to
+          build structured, accurate diagrams automatically.
+        </p>
+
+        <section class="flex items-center gap-4 mb-5">
+          <button
+            class="btn bg-gray-900 hover:bg-gray-700 text-white border-none rounded-xl px-7 font-semibold shadow-md"
+          >
+            Get Started
+          </button>
+          <button
+            class="btn btn-outline border-gray-300 text-gray-700 hover:bg-gray-50 rounded-xl px-7 font-semibold bg-white/60"
+          >
+            About Us (Not Working)
+          </button>
+        </section>
+
+        <p class="text-sm text-gray-400">
+          Designed exclusively for
+          <a href="#" class="text-teal-600 hover:underline"> Aether Automation </a>
+          workflows.
+        </p>
+      </section>
+
+      <!-- Right: Browser Mockup -->
+      <section class="flex-shrink-0 w-[460px] relative">
+        <figure
+          class="absolute -top-12 -right-12 w-80 h-80 bg-teal-200/40 rounded-full blur-3xl pointer-events-none"
+        ></figure>
+
+        <!-- Browser window card -->
+        <figure
+          class="relative bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden"
+        >
+          <figure class="flex items-center gap-1.5 px-4 py-3 bg-gray-50 border-b border-gray-200">
+            <span class="w-3 h-3 rounded-full bg-red-400 inline-block"></span>
+            <span class="w-3 h-3 rounded-full bg-yellow-400 inline-block"></span>
+            <span class="w-3 h-3 rounded-full bg-green-400 inline-block"></span>
+            <figcaption
+              class="ml-3 flex-1 bg-white border border-gray-200 rounded-md text-xs text-gray-400 px-3 py-1 text-center select-none"
+            >
+              http:/we.hope.you.like.our.app
+            </figcaption>
+          </figure>
+
+          <!-- Card body -->
+          <section class="p-6 space-y-4">
+            <div class="flex items-start justify-between">
+              <article>
+                <h3 class="font-bold text-gray-900 text-[0.95rem] leading-snug">
+                  Project Alpha Data
+                </h3>
+                <p class="text-xs text-gray-400 mt-0.5">Source: Zoho Creator</p>
+              </article>
+              <span
+                class="badge bg-green-100 text-green-600 text-xs font-semibold border-none px-3 py-2 rounded-lg"
+              >
+                Active
+              </span>
+            </div>
+
+            <!-- Top mockup modal -->
+            <section class="flex items-center gap-3 bg-gray-50 rounded-xl p-3.5">
+              <figure
+                class="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center flex-shrink-0"
+              >
+                <svg
+                  class="w-6 h-6"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="white"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="blue"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125"
+                  />
+                </svg>
+              </figure>
+              <figure class="flex-1 space-y-1.5">
+                <figure class="h-2 bg-gray-300 rounded-full w-3/4"></figure>
+                <figure class="h-2 bg-gray-200 rounded-full w-1/2"></figure>
+              </figure>
+
+              <svg
+                class="w-6 h-6 text-gray-400 flex-shrink-0"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+                />
+              </svg>
+            </section>
+
+            <section class="flex justify-center py-1">
+              <div
+                class="w-10 h-10 rounded-full bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-400"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="size-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z"
+                  />
+                </svg>
+              </div>
+            </section>
+
+            <!-- Bottom mockup modal -->
+            <section
+              class="flex items-center gap-3 bg-gray-50 rounded-xl p-3.5 border-b-2 border-orange-400"
+            >
+              <div
+                class="w-9 h-9 rounded-lg bg-orange-500 flex items-center justify-center flex-shrink-0"
+              >
+                <svg
+                  class="w-6 h-6 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z"
+                  />
+                </svg>
+              </div>
+
+              <figure class="flex-1 space-y-1.5">
+                <figure class="h-2 bg-gray-300 rounded-full w-3/4"></figure>
+                <figure class="h-2 bg-gray-200 rounded-full w-1/2"></figure>
+              </figure>
+              <span class="text-xs text-gray-500 font-semibold flex-shrink-0"> Generated </span>
+            </section>
+          </section>
+        </figure>
+      </section>
+    </main>
+  </body>
+</html>
