@@ -17,25 +17,104 @@
     <title>Login</title>
   </head>
 
-  <body class="flex items-center justify-center min-h-screen">
+  <body class="dot-bg flex items-center justify-center min-h-screen">
     <form th:action="@{/login}" method="post">
       <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
-        <h2 class="text-center">
-          <span class="text-xl font-semibold text-gray-900">
+        <h2 class="flex items-center justify-center">
+          <span class="text-2xl font-semibold text-gray-900">
             <span class="font-bold">Aether</span
             ><!-- DO NOT REMOVE THIS COMMENT LINE IT IS USEFUL
             --><span class="font-normal text-gray-500">Gen</span>
           </span>
         </h2>
+        <div class="flex justify-center mb-4 mt-4">
+          <p>Sign in to continue to your account</p>
+        </div>
 
         <label class="label">Email</label>
         <input type="email" class="input" name="email" placeholder="Email" />
 
-        <label class="label">Password</label>
-        <input type="password" class="input" name="password" placeholder="Password" />
+        <label class="label mt-2">Password</label>
+        <section class="relative w-full">
+          <input
+            type="password"
+            class="input w-full pr-10"
+            name="password"
+            placeholder="Password"
+            id="passwordInput"
+          />
+          <button
+            type="button"
+            onclick="togglePassword()"
+            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+            aria-label="Toggle password visibility"
+          >
+            <!-- Eye icon (password hidden) -->
+            <svg
+              id="eyeIcon"
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+              />
+            </svg>
+            <!-- Eye-off icon (password visible) -->
+            <svg
+              id="eyeOffIcon"
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 hidden"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a9.97 9.97 0 012.222-3.592M6.938 6.938A9.953 9.953 0 0112 5c4.477 0 8.268 2.943 9.542 7a9.97 9.97 0 01-2.222 3.593M6.938 6.938L3 3m3.938 3.938l10.124 10.124M17.062 17.062L21 21"
+              />
+            </svg>
+          </button>
+        </section>
 
-        <button class="btn btn-neutral mt-4">Login</button>
+        <div class="flex items-center gap-2 mt-3">
+          <input type="checkbox" class="checkbox checkbox-sm" name="remember-me" id="rememberMe" />
+          <label for="rememberMe" class="label cursor-pointer text-sm">Remember me</label>
+        </div>
+
+        <button class="btn btn-neutral mt-4 w-full">Login</button>
       </fieldset>
     </form>
+
+    <script>
+      function togglePassword() {
+        const input = document.getElementById('passwordInput')
+        const eyeIcon = document.getElementById('eyeIcon')
+        const eyeOffIcon = document.getElementById('eyeOffIcon')
+
+        if (input.type === 'password') {
+          input.type = 'text'
+          eyeIcon.classList.add('hidden')
+          eyeOffIcon.classList.remove('hidden')
+        } else {
+          input.type = 'password'
+          eyeIcon.classList.remove('hidden')
+          eyeOffIcon.classList.add('hidden')
+        }
+      }
+    </script>
   </body>
 </html>
