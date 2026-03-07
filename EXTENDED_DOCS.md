@@ -10,8 +10,8 @@ This project uses a Full-Stack Web Application Architecture with two main layers
 • What it does: Handles business logic, security, and API communications. It
   also servers Thymeleaf templates to the client.
 2. Database
-• Technology: PostgreSQL
-• What it does: Stores sensitive user information.
+• Technology: PostgreSQL on Render
+• What it does: Stores sensitive user information. Handles all CRUD operations.
 
 ## Docker: Containerization & Deployment
 Only use this when you are facing compatibility issues, such as: Application
@@ -27,6 +27,19 @@ docker run -p 8080:8080 aetherxmlbridge
 
 ## GitHub Actions CI/CD – Automated Testing & Build
 On each commit (and pull request), GitHub Actions runs automated tests and builds the application to ensure nothing is broken and that production builds succeed. This helps prevent broken code from reaching the `main` branch.
+
+
+## Useful Notes For Teammates
+
+If certain Thymeleaf templates are not loading and you cannot locate the source of error, try:
+1. Ensure that every opening tag has its corresponding closing tag
+2. No failed imports in the html file
+3. Your HTML files are not allowed to link to CSS files using ../static/css/styles.css, you   must use /css/styles.css as its file path. 
+4. Thymeleaf parses our HTML files, which means that if there exists even one syntax error in our HTML file, we will get an error. 
+
+For any big changes, please do NOT push your changes directly to the main branch, as one bad commit will take down our application that is hosted on Render. Please make a Pull Request, and we will all review it. 
+
+Please Don't push your IDE Settings
 
 ---
 
