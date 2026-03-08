@@ -1,0 +1,16 @@
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+.dot-bg {
+  background-color: #ffffff;
+  background-image: radial-gradient(#d1d5db 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+.gradient-text {
+  background: linear-gradient(90deg, #1a1a2e 0%, #6b7280 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
