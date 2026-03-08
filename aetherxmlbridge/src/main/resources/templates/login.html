@@ -30,6 +30,18 @@
         <div class="flex justify-center mb-5 mt-3">
           <p>Sign in to continue to your account</p>
         </div>
+        <!--login success and error-->
+        <div th:if="${param.error}" class="alert alert-error mb-4 text-sm"><!-- Show login error when Spring adds ?error. -->
+          <span>Invalid email or password.</span><!-- Display a generic login error message. -->
+        </div><!-- End login error block. -->
+
+        <div th:if="${param.logout}" class="alert alert-success mb-4 text-sm"><!-- Show logout success when Spring adds ?logout. -->
+          <span>You have been logged out.</span><!-- Confirm successful logout. -->
+        </div><!-- End logout message block. -->
+
+        <div th:if="${success}" class="alert alert-success mb-4 text-sm"><!-- Show success from flash attributes. -->
+          <span th:text="${success}">Success</span><!-- Render the success message text. -->
+        </div><!-- End success message block. -->
 
         <label class="label">Email</label>
         <input type="email" class="input" name="email" placeholder="johnpork123@gmail.com" />
