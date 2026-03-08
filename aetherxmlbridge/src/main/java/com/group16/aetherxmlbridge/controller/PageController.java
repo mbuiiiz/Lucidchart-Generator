@@ -2,7 +2,8 @@ package com.group16.aetherxmlbridge.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+
+
 
 /**
  * This file is for returning thymeleaf templates to the user when accessing a certain
@@ -25,6 +26,10 @@ public class PageController {
   public String getRegisterPage() {
     return "register";
   }
-  
+
+  @GetMapping("/dashboard")
+  public String getUserDashboard(){
+    return "dashboard";
+  }  
 
 }
