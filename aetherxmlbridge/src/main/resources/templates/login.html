@@ -30,6 +30,18 @@
         <div class="flex justify-center mb-5 mt-3">
           <p>Sign in to continue to your account</p>
         </div>
+        <!--login success and error-->
+        <div th:if="${param.error}" class="alert alert-error mb-4 text-sm">
+          <span>Invalid email or password.</span>
+        </div>
+
+        <div th:if="${param.logout}" class="alert alert-success mb-4 text-sm">
+          <span>You have been logged out.</span>
+        </div>
+
+        <div th:if="${success}" class="alert alert-success mb-4 text-sm">
+          <span th:text="${success}">Success</span>
+        </div>
 
         <label class="label">Email</label>
         <input type="email" class="input" name="email" placeholder="johnpork123@gmail.com" />

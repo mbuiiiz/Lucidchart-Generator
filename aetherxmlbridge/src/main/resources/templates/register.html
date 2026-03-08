@@ -31,6 +31,14 @@
         <div class="flex justify-center mb-5 mt-3">
           <p>Create your account to get started</p>
         </div>
+<!--login error success alert-->
+        <div th:if="${error}" class="alert alert-error mb-4 text-sm">
+          <span th:text="${error}">Error</span>
+        </div>
+
+        <div th:if="${success}" class="alert alert-success mb-4 text-sm">
+          <span th:text="${success}">Success</span>
+        </div>
 
         <label class="label">Full Name</label>
         <input type="text" class="input w-full" name="fullName" placeholder="John Pork" />
