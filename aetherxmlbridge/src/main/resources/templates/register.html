@@ -41,11 +41,22 @@
         </div>
 
         <label class="label">Full Name</label>
-        <input type="text" class="input w-full" name="fullName" placeholder="John Pork" />
+        <input
+          type="text"
+          class="input w-full"
+          name="fullName"
+          placeholder="John Pork"
+          th:value="${fullName}"
+        />
 
         <label class="label mt-2">Email</label>
-        <input type="email" class="input w-full" name="email" placeholder="johnpork123@gmail.com" />
-
+        <input
+          type="email"
+          class="input w-full"
+          name="email"
+          placeholder="johnpork123@gmail.com"
+          th:value="${email}"
+        />
         <label class="label mt-2">Password</label>
         <section class="relative w-full">
           <input

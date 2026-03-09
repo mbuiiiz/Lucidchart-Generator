@@ -1,5 +1,6 @@
 <!doctype html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -170,8 +171,13 @@
 
             <!-- Replace this with user information using thyemleaf templating -->
             <div class="flex-1">
-              <p class="text-sm font-semibold text-gray-900">User Name</p>
-              <p class="text-xs text-gray-500">user@aether.com</p>
+              <p class="text-sm font-semibold text-gray-900"
+                th:text="${currentUser.fullName}">
+              </p>
+           
+              <p class="text-xs text-gray-500"
+                th:text="${currentUser.email}">
+              </p>
             </div>
           </div>
 
@@ -204,11 +210,23 @@
       <!-- Main Content -->
       <main class="flex-1 overflow-auto">
         <header class="bg-white/80 backdrop-blur-md sticky top-0 z-40 border-b border-gray-100">
-          <div class="px-8 py-3">
-            <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
-            <p class="text-sm text-gray-500 mt-1">
-              Welcome back! Manage your Zoho projects and generate diagrams.
-            </p>
+          <div class="px-8 py-3 flex items-center justify-between">
+        
+            <div>
+              <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
+              <p class="text-sm text-gray-500 mt-1">
+                Welcome back! Manage your Zoho projects and generate diagrams.
+              </p>
+            </div>
+        
+            <!-- ADMIN BUTTON -->
+            <div th:if="${currentUser != null and currentUser.role == 'ROLE_ADMIN'}">
+              <a th:href="@{/admin/users}"
+                class="btn bg-gray-900 hover:bg-gray-700 text-white border-none rounded-lg font-medium px-5">
+                Manage Users
+              </a>
+            </div>
+        
           </div>
         </header>
 

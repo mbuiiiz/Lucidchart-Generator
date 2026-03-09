@@ -24,6 +24,7 @@ public class ProdSecurityConfig {
             .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
             .requestMatchers("/h2-console/**").permitAll()
             .requestMatchers("/", "/login", "/register").permitAll()
+            .requestMatchers("/admin/**").hasRole("ADMIN")
             .anyRequest().authenticated()
         )
 
@@ -39,7 +40,7 @@ public class ProdSecurityConfig {
             .loginProcessingUrl("/login")
             .usernameParameter("email")
             .passwordParameter("password")
-            .defaultSuccessUrl("/", true)
+            .defaultSuccessUrl("/dashboard", true)
             .failureUrl("/login?error")
             .permitAll()
         )
@@ -59,7 +60,7 @@ public class ProdSecurityConfig {
           )
           .oauth2Login(oauth -> oauth
               .loginPage("/login")
-              .defaultSuccessUrl("/", true)
+              .defaultSuccessUrl("/dashboard", true)
           );
     }
 

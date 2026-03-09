@@ -28,14 +28,24 @@ public class AppUserService implements UserDetailsService {
         if (appUserRepository.findByEmail(email).isPresent()) {
             throw new IllegalArgumentException("Email already registered: " + email);
         }
-
-        AppUser newUser = AppUser.builder() 
+    
+        // DEV ONLY 
+        
+        //String assignedRole = email.equalsIgnoreCase("a@a.com")
+        //        ? "ROLE_ADMIN"
+        //        : "ROLE_USER";
+        
+    
+        // PROD VERSION
+        String assignedRole = "ROLE_USER";
+    
+        AppUser newUser = AppUser.builder()
                 .fullName(fullName)
                 .email(email)
-                // 
+                .role(assignedRole)
                 .passwordHash(passwordEncoder.encode(rawPassword))
                 .build();
-
+    
         return appUserRepository.save(newUser);
     }
 }
