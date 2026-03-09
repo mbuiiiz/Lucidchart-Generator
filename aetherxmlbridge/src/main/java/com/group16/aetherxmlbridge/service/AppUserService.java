@@ -29,15 +29,15 @@ public class AppUserService implements UserDetailsService {
             throw new IllegalArgumentException("Email already registered: " + email);
         }
     
-        // DEV ONLY 
+        // DEV ONLY Hardcoded account with admin role
         
-        //String assignedRole = email.equalsIgnoreCase("a@a.com")
-        //        ? "ROLE_ADMIN"
-        //        : "ROLE_USER";
+        String assignedRole = email.equalsIgnoreCase("admin@gmail.com")
+                ? "ROLE_ADMIN"
+                : "ROLE_USER";
         
     
         // PROD VERSION
-        String assignedRole = "ROLE_USER";
+        //String assignedRole = "ROLE_USER";
     
         AppUser newUser = AppUser.builder()
                 .fullName(fullName)
