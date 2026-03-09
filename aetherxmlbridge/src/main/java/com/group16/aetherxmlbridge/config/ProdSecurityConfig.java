@@ -18,15 +18,23 @@ public class ProdSecurityConfig {
       HttpSecurity http,
       ObjectProvider<ClientRegistrationRepository> clientRegistrationRepository
   ) throws Exception {
+    boolean oauthEnabled = clientRegistrationRepository.getIfAvailable() != null;
+
     http
         .csrf(csrf -> csrf.disable()) // enable this for future production
-        .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
-            .requestMatchers("/h2-console/**").permitAll()
-            .requestMatchers("/", "/login", "/register").permitAll()
-            .requestMatchers("/admin/**").hasRole("ADMIN")
-            .anyRequest().authenticated()
-        )
+        .authorizeHttpRequests(auth -> {
+            auth.requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
+                .requestMatchers("/h2-console/**").permitAll()
+                .requestMatchers("/", "/login", "/register").permitAll()
+                .requestMatchers("/admin/**").hasRole("ADMIN");
+            
+            // Add OAuth matchers if OAuth is enabled
+            if (oauthEnabled) {
+                auth.requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll();
+            }
+            
+            auth.anyRequest().authenticated();
+        })
 
         // disabling iframe bc h2 uses iframe for development change to 
         // .frameOptions(frame -> frame.sameOrigin()) 
@@ -52,13 +60,9 @@ public class ProdSecurityConfig {
         );
 
 
-    // check if oauth client id and secret token is available
-    if (clientRegistrationRepository.getIfAvailable() != null) {
-      http
-          .authorizeHttpRequests(auth -> auth
-              .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll()
-          )
-          .oauth2Login(oauth -> oauth
+    // Configure OAuth2 login if available
+    if (oauthEnabled) {
+      http.oauth2Login(oauth -> oauth
               .loginPage("/login")
               .defaultSuccessUrl("/dashboard", true)
           );
