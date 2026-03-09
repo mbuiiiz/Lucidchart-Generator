@@ -25,7 +25,7 @@ public class ProdSecurityConfig {
         .authorizeHttpRequests(auth -> {
             auth.requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
-                .requestMatchers("/", "/login", "/register").permitAll()
+                .requestMatchers("/", "/login", "/register", "/error", "/error/**").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN");
             
             // Add OAuth matchers if OAuth is enabled

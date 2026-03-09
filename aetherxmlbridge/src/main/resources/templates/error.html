@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/css/login_page.css}" />
+    <title>Error</title>
+  </head>
+
+  <body class="dot-bg flex items-center justify-center min-h-screen px-4">
+    <section class="fieldset bg-base-200 border-base-300 rounded-box w-full max-w-md border p-8 shadow-lg">
+      <!-- Logo -->
+      <h2 class="flex items-center justify-center mb-6">
+        <span class="text-2xl font-semibold text-gray-900">
+          <span class="font-bold">Aether</span
+          ><span class="font-normal text-gray-500">Gen</span>
+        </span>
+      </h2>
+
+      <!-- Error Icon -->
+      <section class="flex justify-center mb-6">
+        <figure class="bg-error/10 p-4 rounded-full">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-error" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4v2m0 4V9m4.35-4.5H3.65A2.65 2.65 0 001 6.5v11A2.65 2.65 0 003.65 20h16.7A2.65 2.65 0 0023 17.5v-11A2.65 2.65 0 0020.35 4.5z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4v.01" />
+          </svg>
+        </figure>
+      </section>
+
+      <!-- Error Title -->
+      <article class="text-center mb-4">
+        <p class="text-2xl font-bold text-gray-900">Oops!</p>
+        <p class="text-base text-gray-600 mt-2">
+          Something didn't go as planned.
+        </p>
+      </article>
+
+      <!-- Status Code Alert -->
+      <section class="alert alert-error mb-4" role="alert">
+        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l-2-2m0 0l-2-2m2 2l2-2m-2 2l-2 2m8-2a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        <div>
+          <h3 class="font-bold" th:text="${statusCode} != null ? 'Error: ' + ${statusCode} : 'An Error Occurred'">Error</h3>
+          <div class="text-xs" th:if="${errorMessage}" th:text="${errorMessage}">An unexpected error occurred.</div>
+        </div>
+      </section>
+
+      <!-- Helpful Message -->
+      <article class="bg-base-100 rounded-lg p-4 mb-6 border border-base-300">
+        <p class="text-sm text-gray-700">
+          <span class="font-semibold">What happened?</span><br/>
+          We encountered an unexpected issue while processing your request. Please try again or contact support if the problem persists.
+        </p>
+      </article>
+
+      <nav class="space-y-3">
+        <a th:href="@{/dashboard}" class="btn btn-neutral w-full">
+          Go Back to Dashboard
+        </a>
+        <a th:href="@{/}" class="btn btn-outline w-full">
+          Return Home
+        </a>
+      </nav>
+
+      <p class="text-xs text-gray-700 font-bold text-center mt-6">Error ID: <span th:text="${statusCode} != null ? ${statusCode} : 'Unknown'">Unknown</span></p>
+    </section>
+  </body>
+</html>
