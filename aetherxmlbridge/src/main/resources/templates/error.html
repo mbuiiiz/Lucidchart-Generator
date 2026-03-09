@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/css/login_page.css}" />
+    <title>Error</title>
+  </head>
+
+  <body class="dot-bg flex items-center justify-center min-h-screen px-4">
+    <section class="fieldset bg-base-200 border-base-300 rounded-box w-full max-w-md border p-6 shadow-lg">
+      <h2 class="flex items-center justify-center">
+        <span class="text-2xl font-semibold text-gray-900">
+          <span class="font-bold">Aether</span
+          ><span class="font-normal text-gray-500">Gen</span>
+        </span>
+      </h2>
+
+      <div class="text-center mt-4">
+        <p class="text-lg font-semibold text-gray-900">Something went wrong</p>
+        <p class="text-sm text-gray-600 mt-2">
+          You are seeing this page because an error has occured.
+        </p>
+      </div>
+
+      <div class="alert alert-error mt-4 text-sm" role="alert">
+        <span th:text="'Status: ' + ${statusCode}">Status: Unknown</span>
+      </div>
+
+      <p class="text-xs text-gray-500 mt-3" th:text="${errorMessage}">An unexpected error occurred.</p>
+
+      <a th:href="@{/dashboard}" class="btn btn-neutral mt-5 w-full">Go Back to Dashboard</a>
+    </section>
+  </body>
+</html>
