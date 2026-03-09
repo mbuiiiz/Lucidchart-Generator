@@ -4,14 +4,14 @@
 ## System Architecture: The Big Picture
 This project uses a Full-Stack Web Application Architecture with two main layers:
 
-1. Backend (Server)
-• Technology: Java Spring Boot
-• Location: aetherxmlbridge/
-• What it does: Handles business logic, security, and API communications. It
-  also servers Thymeleaf templates to the client.
-2. Database
-• Technology: PostgreSQL on Render
-• What it does: Stores sensitive user information. Handles all CRUD operations.
+- Backend (Server)
+  - Technology: Java Spring Boot
+  - Location: aetherxmlbridge/
+  - What it does: Handles business logic, security, and  API communications. It also servers Thymeleaf templates to the client.
+
+- Database
+  - Technology: PostgreSQL on Render
+  - What it does: Stores sensitive user information. Handles all CRUD operations.
 
 ## Docker: Containerization & Deployment
 Only use this when you are facing compatibility issues, such as: Application
