@@ -1,7 +1,14 @@
 package com.group16.aetherxmlbridge.controller;
 
+import java.security.Principal;
+import org.springframework.ui.Model;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import com.group16.aetherxmlbridge.repository.AppUserRepository;
+import com.group16.aetherxmlbridge.model.AppUser;
+
 
 
 
@@ -11,7 +18,12 @@ import org.springframework.web.bind.annotation.GetMapping;
  */
 @Controller
 public class PageController {
+  private final AppUserRepository appUserRepository;
 
+  public PageController(AppUserRepository appUserRepository) {
+    this.appUserRepository = appUserRepository;
+  }
+  
   @GetMapping("/")
   public String getLanding(){
     return "index";
@@ -28,8 +40,15 @@ public class PageController {
   }
 
   @GetMapping("/dashboard")
-  public String getUserDashboard(){
+  public String getUserDashboard(Model model, Principal principal){
+
+    if (principal != null) {
+      AppUser user = appUserRepository.findByEmail(principal.getName()).orElse(null);
+      model.addAttribute("currentUser", user);
+    }
+
     return "dashboard";
-  }  
+  }
 
 }
+

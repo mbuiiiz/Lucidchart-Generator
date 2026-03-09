@@ -49,43 +49,46 @@ public class AppUser implements UserDetails {
     @Column(nullable = false)
     private String passwordHash;
 
-    @Builder.Default  // ensures default value works with @Builder
+    @Builder.Default
+    @Column(nullable = false)
+    private String role = "ROLE_USER";
+
+    @Builder.Default
     @Column(nullable = false)
     private Instant createdAt = Instant.now();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
-    }
-
-    // other UserDetails method overrides
-    @Override
-    public String getPassword() { 
-      return passwordHash; 
+        return List.of(new SimpleGrantedAuthority(role));
     }
 
     @Override
-    public String getUsername() { 
-      return email; 
+    public String getPassword() {
+        return passwordHash;
     }
 
     @Override
-    public boolean isAccountNonExpired() { 
-      return true; 
+    public String getUsername() {
+        return email;
     }
 
     @Override
-    public boolean isAccountNonLocked() { 
-      return true; 
+    public boolean isAccountNonExpired() {
+        return true;
     }
 
     @Override
-    public boolean isCredentialsNonExpired() { 
-      return true; 
+    public boolean isAccountNonLocked() {
+        return true;
     }
 
     @Override
-    public boolean isEnabled() { 
-      return true; 
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

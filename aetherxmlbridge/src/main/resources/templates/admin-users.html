@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en" data-theme="light" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&amp;display=swap"
+      rel="stylesheet"
+    />
+
+    <title>Admin Users - AetherGen</title>
+
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+
+      .dot-bg {
+        background-color: #fafafa;
+        background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
+        background-size: 16px 16px;
+      }
+    </style>
+  </head>
+
+  <body class="dot-bg min-h-screen">
+    <div class="flex min-h-screen">
+      <!-- Sidebar -->
+      <aside class="w-64 bg-white border-r border-gray-100 flex flex-col">
+        <section class="p-6 border-b border-gray-100">
+          <section class="flex items-center gap-2.5">
+            <figure
+              class="w-8 h-8 bg-gray-900 rounded-md flex items-center justify-center text-white font-bold text-sm select-none"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418"
+                />
+              </svg>
+            </figure>
+            <span class="text-xl font-semibold text-gray-900">
+              <span class="font-bold">Aether</span><span class="font-normal text-gray-500">Gen</span>
+            </span>
+          </section>
+        </section>
+
+        <nav class="flex-1 p-4">
+          <ul class="space-y-2">
+            <li>
+              <a
+                th:href="@{/dashboard}"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-500 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="size-5"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
+                  />
+                </svg>
+                Dashboard
+              </a>
+            </li>
+
+            <li>
+              <a
+                th:href="@{/admin/users}"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg bg-gray-100 text-gray-900 font-medium transition-colors"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="size-5"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M18 7.5V6a3 3 0 1 0-6 0v1.5m-3 0h12A1.5 1.5 0 0 1 22.5 9v10.5A1.5 1.5 0 0 1 21 21H9a1.5 1.5 0 0 1-1.5-1.5V9A1.5 1.5 0 0 1 9 7.5Zm-3 0H4.5A1.5 1.5 0 0 0 3 9v10.5A1.5 1.5 0 0 0 4.5 21H6"
+                  />
+                </svg>
+                Admin Users
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <section class="p-4 border-t border-gray-100">
+          <form th:action="@{/logout}" method="post">
+            <button
+              class="w-full btn btn-sm bg-gray-900 hover:bg-gray-700 text-white border-none rounded-lg font-medium shadow-sm flex items-center justify-center gap-2"
+              type="submit"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-4"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"
+                />
+              </svg>
+              Logout
+            </button>
+          </form>
+        </section>
+      </aside>
+
+      <!-- Main -->
+      <main class="flex-1 overflow-auto">
+        <header class="bg-white/80 backdrop-blur-md sticky top-0 z-40 border-b border-gray-100">
+          <div class="px-8 py-4">
+            <h1 class="text-2xl font-bold text-gray-900">Admin Users</h1>
+            <p class="text-sm text-gray-500 mt-1">
+              View all registered users and their assigned roles.
+            </p>
+          </div>
+        </header>
+
+        <div class="p-8">
+          <!-- Stats -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <section class="bg-white border border-gray-100 rounded-xl p-4 shadow-sm">
+              <section class="flex items-center justify-between mb-2">
+                <h3 class="text-sm font-medium text-gray-500">Total Users</h3>
+                <figure class="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-4 text-gray-600"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M18 18.72a9.094 9.094 0 0 0 3.742-.479 3 3 0 0 0-4.682-2.72m.94 3.198v.75A2.25 2.25 0 0 1 15.75 21H6a2.25 2.25 0 0 1-2.25-2.25v-.75m14.25 0a5.966 5.966 0 0 0-1.455-3.899M3 18.72a9.094 9.094 0 0 1-3.742-.479 3 3 0 0 1 4.682-2.72M3.75 18.72v.75A2.25 2.25 0 0 0 6 21h9.75m-9-13.5a3.75 3.75 0 1 1 7.5 0 3.75 3.75 0 0 1-7.5 0Z"
+                    />
+                  </svg>
+                </figure>
+              </section>
+              <p class="text-2xl font-bold text-gray-900" th:text="${#lists.size(users)}">0</p>
+              <p class="text-xs text-gray-400 mt-2">Registered accounts</p>
+            </section>
+
+            <section class="bg-white border border-gray-100 rounded-xl p-4 shadow-sm">
+              <section class="flex items-center justify-between mb-2">
+                <h3 class="text-sm font-medium text-gray-500">Admin Accounts</h3>
+                <figure class="w-8 h-8 bg-orange-50 rounded-lg flex items-center justify-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-4 text-orange-600"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="m9 12.75 2.25 2.25 4.5-4.5M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9Z"
+                    />
+                  </svg>
+                </figure>
+              </section>
+              <p
+                class="text-2xl font-bold text-gray-900"
+                th:text="${#lists.size(users.?[role == 'ROLE_ADMIN'])}"
+              >
+                0
+              </p>
+              <p class="text-xs text-gray-400 mt-2">Users with elevated access</p>
+            </section>
+
+            <section class="bg-white border border-gray-100 rounded-xl p-4 shadow-sm">
+              <section class="flex items-center justify-between mb-2">
+                <h3 class="text-sm font-medium text-gray-500">Standard Users</h3>
+                <figure class="w-8 h-8 bg-teal-50 rounded-lg flex items-center justify-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-4 text-teal-600"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.947m-7.5-8.25a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM4.5 19.5a8.966 8.966 0 0 1 3.621-7.188"
+                    />
+                  </svg>
+                </figure>
+              </section>
+              <p
+                class="text-2xl font-bold text-gray-900"
+                th:text="${#lists.size(users.?[role == 'ROLE_USER'])}"
+              >
+                0
+              </p>
+              <p class="text-xs text-gray-400 mt-2">Regular platform users</p>
+            </section>
+          </div>
+
+          <!-- Users Table -->
+          <div class="bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden">
+            <section class="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
+              <article>
+                <h2 class="text-lg font-semibold text-gray-900">Registered Users</h2>
+                <p class="text-sm text-gray-500 mt-1">
+                  Full list of accounts currently stored in the database.
+                </p>
+              </article>
+            </section>
+
+            <section class="overflow-x-auto">
+              <table class="table w-full">
+                <thead class="bg-gray-50 text-gray-600">
+                  <tr>
+                    <th>ID</th>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Created At</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr th:each="user : ${users}" class="hover">
+                    <td th:text="${user.id}" class="font-medium text-gray-700">1</td>
+                    <td th:text="${user.fullName}" class="text-gray-900">Name</td>
+                    <td th:text="${user.email}" class="text-gray-600">email@example.com</td>
+                    <td>
+                      <span
+                        th:if="${user.role == 'ROLE_ADMIN'}"
+                        class="badge bg-orange-100 text-orange-700 border-none px-3 py-3 font-medium"
+                      >
+                        ADMIN
+                      </span>
+                      <span
+                        th:if="${user.role == 'ROLE_USER'}"
+                        class="badge bg-gray-100 text-gray-700 border-none px-3 py-3 font-medium"
+                      >
+                        USER
+                      </span>
+                    </td>
+                    <td th:text="${user.createdAt}" class="text-gray-500">2026-03-08T00:00:00Z</td>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

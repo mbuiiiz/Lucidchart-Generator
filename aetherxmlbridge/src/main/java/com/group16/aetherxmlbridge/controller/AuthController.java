@@ -1,9 +1,10 @@
 package com.group16.aetherxmlbridge.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import com.group16.aetherxmlbridge.service.AppUserService;
 
 @Controller
@@ -15,47 +16,60 @@ public class AuthController {
     this.appUserService = appUserService;
   }
 
-  // handle registration form submissions validation
   @PostMapping("/register")
   public String register(
       @RequestParam("fullName") String fullName,
       @RequestParam("email") String email,
       @RequestParam("password") String password,
       @RequestParam("confirmPassword") String confirmPassword,
-      RedirectAttributes redirectAttributes
+      Model model
   ) {
-    if (fullName == null || fullName.isBlank()) {
-      redirectAttributes.addFlashAttribute("error", "Full name is required");
-      return "redirect:/register";
+    fullName = fullName == null ? "" : fullName.trim();
+    email = email == null ? "" : email.trim().toLowerCase();
+
+    if (fullName.isBlank()) {
+      model.addAttribute("error", "Full name is required");
+      model.addAttribute("fullName", fullName);
+      model.addAttribute("email", email);
+      return "register";
     }
 
-    if (email == null || email.isBlank()) {
-      redirectAttributes.addFlashAttribute("error", "Email is required");
-      return "redirect:/register";
+    if (email.isBlank()) {
+      model.addAttribute("error", "Email is required");
+      model.addAttribute("fullName", fullName);
+      model.addAttribute("email", email);
+      return "register";
     }
 
     if (password == null || password.isBlank()) {
-      redirectAttributes.addFlashAttribute("error", "Password is required");
-      return "redirect:/register";
+      model.addAttribute("error", "Password is required");
+      model.addAttribute("fullName", fullName);
+      model.addAttribute("email", email);
+      return "register";
     }
 
     if (password.length() < 8) {
-      redirectAttributes.addFlashAttribute("error", "Password must be at least 8 characters");
-      return "redirect:/register";
+      model.addAttribute("error", "Password must be at least 8 characters");
+      model.addAttribute("fullName", fullName);
+      model.addAttribute("email", email);
+      return "register";
     }
 
     if (!password.equals(confirmPassword)) {
-      redirectAttributes.addFlashAttribute("error", "Passwords do not match");
-      return "redirect:/register";
+      model.addAttribute("error", "Passwords do not match");
+      model.addAttribute("fullName", fullName);
+      model.addAttribute("email", email);
+      return "register";
     }
 
     try {
-      appUserService.registerUser(fullName.trim(), email.trim().toLowerCase(), password);
-      redirectAttributes.addFlashAttribute("success", "Account created. Please log in.");
+      appUserService.registerUser(fullName, email, password);
       return "redirect:/login";
     } catch (IllegalArgumentException ex) {
-      redirectAttributes.addFlashAttribute("error", ex.getMessage());
-      return "redirect:/register";
+      model.addAttribute("error", ex.getMessage());
+      model.addAttribute("fullName", fullName);
+      model.addAttribute("email", email);
+      return "register";
     }
   }
 }
