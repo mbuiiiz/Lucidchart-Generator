@@ -16,7 +16,8 @@ public class ProdSecurityConfig {
   @Bean
   public SecurityFilterChain securityFilterChain(
       HttpSecurity http,
-      ObjectProvider<ClientRegistrationRepository> clientRegistrationRepository
+      ObjectProvider<ClientRegistrationRepository> clientRegistrationRepository,
+      OAuthLoginSuccessHandler oAuthLoginSuccessHandler
   ) throws Exception {
     boolean oauthEnabled = clientRegistrationRepository.getIfAvailable() != null;
 
@@ -64,7 +65,7 @@ public class ProdSecurityConfig {
     if (oauthEnabled) {
       http.oauth2Login(oauth -> oauth
               .loginPage("/login")
-              .defaultSuccessUrl("/dashboard", true)
+              .successHandler(oAuthLoginSuccessHandler)
           );
     }
 
