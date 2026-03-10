@@ -7,24 +7,17 @@ import org.springframework.http.MediaType;
 @RestController
 public class DiagramController {
 
+    private final AiDiagramService aiDiagramService;
+
+    public DiagramController(AiDiagramService aiDiagramService) {
+        this.aiDiagramService = aiDiagramService;
+    }
+
     @PostMapping("/generate-xml")
     public ResponseEntity<String> generateXML(@RequestBody ProjectData projectData)
     {
 
-        String xml = """
-        <diagram>
-            <node>%s</node>
-            <node>%s</node>
-            <description>%s</description>
-            <connection from="%s" to="%s"/>
-        </diagram>
-        """.formatted(
-                projectData.getModule(),
-                projectData.getTrigger(),
-                projectData.getDescription(),
-                projectData.getTrigger(),
-                projectData.getModule()
-        );
+        String xml = aiDiagramService.generateXml(projectData);
 
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_XML)
