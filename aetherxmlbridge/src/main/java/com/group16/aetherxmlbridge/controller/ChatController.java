@@ -3,7 +3,10 @@ package com.group16.aetherxmlbridge.controller;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.GetMapping;
+
+
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api/ai")
@@ -16,10 +19,10 @@ public class ChatController {
   }
 
   // Testing endpoints
-  @GetMapping("/pirates")
-  public String getPirates() {
+  @PostMapping("/chat")
+  public String chat(@RequestBody String userMessage) {
       return chatClient.prompt()
-        .user("Generate the names of 5 famous pirates.")
+        .user(userMessage)
         .call()
         .content();
   }
