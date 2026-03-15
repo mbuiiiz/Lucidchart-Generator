@@ -37,26 +37,28 @@
           </span>
         </div>
 
-        <nav class="flex items-center gap-7">
-          <a href="#" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">
-            How it Works (WiP)
-          </a>
-          <a href="#" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">
-            Integrations (WiP)
-          </a>
-          <a
-            href="#"
-            class="text-sm text-gray-500 font-medium px-3 py-1 hover:text-gray-900 transition-colors"
-          >
-            The Microservice (WiP)
-          </a>
-        </nav>
+        <div class="flex items-center gap-4">
+          <nav class="flex items-center gap-7">
+            <a href="#" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">
+              How it Works (WiP)
+            </a>
+            <a href="#" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">
+              Integrations (WiP)
+            </a>
+            <a
+              href="#"
+              class="text-sm text-gray-500 font-medium px-3 py-1 hover:text-gray-900 transition-colors"
+            >
+              The Microservice (WiP)
+            </a>
+          </nav>
 
-        <button
-          class="btn btn-sm bg-gray-900 hover:bg-gray-700 text-white border-none rounded-lg px-5 text-sm font-medium shadow-sm"
-        >
-          Temporary (WiP)
-        </button>
+          <button
+            class="btn btn-sm bg-gray-900 hover:bg-gray-700 text-white border-none rounded-lg px-5 text-sm font-medium shadow-sm"
+          >
+            Temporary (WiP)
+          </button>
+        </div>
       </div>
     </header>
 
@@ -235,5 +237,38 @@
         </figure>
       </section>
     </main>
+
+    <!-- Chatbot -->
+    <div class="fixed bottom-10 right-10 z-[999]">
+      <div id="chat-icon" class="w-16 h-16 bg-gray-900 rounded-full flex items-center justify-center cursor-pointer shadow-lg transform hover:scale-110 transition-transform">
+        <img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/icons/chat-dots-fill.svg" alt="Chat" class="w-8 h-8" style="filter: invert(1);" />
+      </div>
+
+      <div id="chat-popup" class="hidden fixed bottom-28 right-10 w-96 h-[600px] bg-white rounded-2xl shadow-2xl border border-gray-200 flex-col transition-all duration-300 ease-in-out">
+        <div class="flex items-center justify-between px-6 py-4 bg-gray-50 border-b border-gray-200 rounded-t-2xl">
+          <h3 class="font-bold text-gray-900">AetherGen Assistant</h3>
+          <button id="close-btn" class="text-gray-500 hover:text-gray-900">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        <div id="chat-box" class="flex-1 p-6 overflow-y-auto">
+          <div class="chat-message incoming mb-4 flex">
+            <div class="bg-gray-100 text-gray-800 rounded-lg p-3 max-w-xs">
+              <p>Hello! How can I help you today?</p>
+            </div>
+          </div>
+        </div>
+        <div class="p-6 bg-gray-50 border-t border-gray-200 rounded-b-2xl">
+          <div class="flex items-center gap-3">
+            <input type="text" id="chat-input" placeholder="Ask a question..." class="min-w-0 flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-shadow">
+            <button id="send-btn" class="shrink-0 h-10 px-4 text-sm bg-gray-900 hover:bg-gray-700 text-white font-semibold rounded-lg transition-colors">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="/js/chatbot.js"></script>
   </body>
 </html>
