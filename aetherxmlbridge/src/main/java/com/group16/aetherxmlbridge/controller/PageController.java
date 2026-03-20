@@ -3,6 +3,8 @@ package com.group16.aetherxmlbridge.controller;
 import java.security.Principal;
 import org.springframework.ui.Model;
 
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -43,8 +45,23 @@ public class PageController {
   public String getUserDashboard(Model model, Principal principal){
 
     if (principal != null) {
-      AppUser user = appUserRepository.findByEmail(principal.getName()).orElse(null);
-      model.addAttribute("currentUser", user);
+      String email;
+      if (principal instanceof OAuth2AuthenticationToken oauthToken) {
+        // OAuth2 users: principal.getName() returns the subject ID, not email
+        OAuth2User oauthUser = oauthToken.getPrincipal();
+        email = oauthUser.getAttribute("Email"); // Zoho uses "Email"
+        if (email == null) {
+          email = oauthUser.getAttribute("email"); // Google uses "email"
+        }
+      } else {
+        email = principal.getName(); // form login uses email as username
+      }
+
+      // check email null
+      if (email != null) {
+        AppUser user = appUserRepository.findByEmail(email).orElse(null);
+        model.addAttribute("currentUser", user);
+      }
     }
 
     return "dashboard";
