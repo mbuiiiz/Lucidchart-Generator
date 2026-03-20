@@ -26,6 +26,6 @@ replay_pid*
 .env
 .idea
 .vscode
-.prettierrc
+.prettierrc.json
 .Ds_Store
 target/

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
+
     <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
@@ -26,38 +26,41 @@
           <div
             class="w-8 h-8 bg-gray-900 rounded-md flex items-center justify-center text-white font-bold text-sm select-none"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418" />
-            </svg>
+            <th:block th:replace="~{fragments/icons :: brandGlobe('size-6')}"></th:block>
           </div>
           <span class="text-xl font-semibold text-gray-900">
-            <span class="font-bold">Aether</span
-            ><!-- DO NOT REMOVE THIS COMMENT LINE IT IS USEFUL
-            --><span class="font-normal text-gray-500">Gen</span>
+            <span class="font-bold">Aether</span><span class="font-normal text-gray-500">Gen</span>
           </span>
         </div>
 
         <div class="flex items-center gap-4">
           <nav class="flex items-center gap-7">
-            <a href="#" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">
-              How it Works (WiP)
-            </a>
-            <a href="#" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">
-              Integrations (WiP)
+            <a
+              href="#how-it-works"
+              class="text-sm text-gray-500 hover:text-gray-900 transition-colors"
+            >
+              How it Works
             </a>
             <a
-              href="#"
+              href="#integrations"
+              class="text-sm text-gray-500 hover:text-gray-900 transition-colors"
+            >
+              Integrations
+            </a>
+            <a
+              href="#showcase"
               class="text-sm text-gray-500 font-medium px-3 py-1 hover:text-gray-900 transition-colors"
             >
-              The Microservice (WiP)
+              The Microservice
             </a>
           </nav>
 
-          <button
+          <a
+            th:href="@{/register}"
             class="btn btn-sm bg-gray-900 hover:bg-gray-700 text-white border-none rounded-lg px-5 text-sm font-medium shadow-sm"
           >
-            Temporary (WiP)
-          </button>
+            Get Started
+          </a>
         </div>
       </div>
     </header>
@@ -65,12 +68,6 @@
     <!-- Hero -->
     <main class="max-w-7xl mx-auto px-8 pt-24 pb-20 flex items-center justify-between gap-16">
       <section class="max-w-[540px]">
-        <article
-          class="inline-flex items-center bg-teal-50 text-teal-700 border border-teal-200 text-xs font-bold tracking-widest uppercase rounded-md px-3 py-1.5 mb-7"
-        >
-          Internal Microservice
-        </article>
-
         <!-- Headline -->
         <h1 class="text-[3.4rem] font-extrabold leading-[1.1] tracking-tight mb-6 text-gray-900">
           Zoho Data to
@@ -91,16 +88,22 @@
             Get Started
           </a>
           <a
-            th:href="@{/register}"
+            href="#about-us"
             class="btn btn-outline border-gray-300 text-gray-700 hover:bg-gray-50 rounded-xl px-7 font-semibold bg-white/60"
           >
-            About Us (WiP)
+            About Us
           </a>
         </section>
 
         <p class="text-sm text-gray-400">
           Designed exclusively for
-          <a href="#" class="text-teal-600 hover:underline"> Aether Automation </a>
+          <a
+            href="https://www.aetherautomation.com/"
+            target="_blank"
+            class="text-teal-600 hover:underline"
+          >
+            Aether Automation
+          </a>
           workflows.
         </p>
       </section>
@@ -147,60 +150,25 @@
               <figure
                 class="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center flex-shrink-0"
               >
-                <svg
-                  class="w-6 h-6"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="white"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="blue"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125"
-                  />
-                </svg>
+                <th:block
+                  th:replace="~{fragments/icons :: database('w-6 h-6 text-white')}"
+                ></th:block>
               </figure>
               <figure class="flex-1 space-y-1.5">
                 <figure class="h-2 bg-gray-300 rounded-full w-3/4"></figure>
                 <figure class="h-2 bg-gray-200 rounded-full w-1/2"></figure>
               </figure>
 
-              <svg
-                class="w-6 h-6 text-gray-400 flex-shrink-0"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
-                />
-              </svg>
+              <th:block
+                th:replace="~{fragments/icons :: arrowRight('w-6 h-6 text-gray-400 flex-shrink-0')}"
+              ></th:block>
             </section>
 
             <section class="flex justify-center py-1">
               <div
                 class="w-10 h-10 rounded-full bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-400"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="size-6"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z"
-                  />
-                </svg>
+                <th:block th:replace="~{fragments/icons :: sparkles('size-6')}"></th:block>
               </div>
             </section>
 
@@ -211,20 +179,7 @@
               <div
                 class="w-9 h-9 rounded-lg bg-orange-500 flex items-center justify-center flex-shrink-0"
               >
-                <svg
-                  class="w-6 h-6 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z"
-                  />
-                </svg>
+                <th:block th:replace="~{fragments/icons :: share('w-6 h-6 text-white')}"></th:block>
               </div>
 
               <figure class="flex-1 space-y-1.5">
@@ -238,36 +193,422 @@
       </section>
     </main>
 
-    <!-- Chatbot -->
-    <div class="fixed bottom-10 right-10 z-[999]">
-      <div id="chat-icon" class="w-16 h-16 bg-gray-900 rounded-full flex items-center justify-center cursor-pointer shadow-lg transform hover:scale-110 transition-transform">
-        <img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/icons/chat-dots-fill.svg" alt="Chat" class="w-8 h-8" style="filter: invert(1);" />
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="max-w-7xl mx-auto px-8 py-24">
+      <div class="text-center mb-16">
+        <article
+          class="inline-flex items-center bg-teal-50 text-teal-700 border border-teal-200 text-xs font-bold tracking-widest uppercase rounded-md px-3 py-1.5 mb-5"
+        >
+          How It Works
+        </article>
+
+        <h2 class="text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
+          From Raw Data to Diagrams in Minutes
+        </h2>
+
+        <p class="text-gray-500 text-[1.05rem] leading-relaxed max-w-[540px] mx-auto">
+          Three simple steps to transform your Zoho Creator project data into professional,
+          structured diagrams automatically.
+        </p>
       </div>
 
-      <div id="chat-popup" class="hidden fixed bottom-28 right-10 w-96 h-[600px] bg-white rounded-2xl shadow-2xl border border-gray-200 flex-col transition-all duration-300 ease-in-out">
-        <div class="flex items-center justify-between px-6 py-4 bg-gray-50 border-b border-gray-200 rounded-t-2xl">
+      <div class="grid grid-cols-3 gap-8 max-w-8xl relative">
+        <article
+          class="relative bg-white self-start rounded-2xl border border-gray-200 p-7 shadow-sm"
+        >
+          <span class="text-sm font-bold text-gray-300 tracking-wider">01</span>
+
+          <figure
+            class="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center mt-4 mb-5"
+          >
+            <th:block th:replace="~{fragments/icons :: database('w-6 h-6 text-white')}"></th:block>
+          </figure>
+
+          <h3 class="text-lg font-bold text-gray-900 mb-2">Connect Your Data</h3>
+
+          <p class="text-md text-gray-500 leading-relaxed">
+            Link your Zoho Creator projects and let AetherGen securely access your application data
+            and schema structures.
+          </p>
+        </article>
+
+        <!-- Step 2 -->
+        <article
+          class="relative bg-white self-start rounded-2xl border border-gray-200 p-7 shadow-sm"
+        >
+          <span class="text-sm font-bold text-gray-300 tracking-wider">02</span>
+
+          <figure
+            class="w-12 h-12 rounded-xl bg-violet-600 flex items-center justify-center mt-4 mb-5"
+          >
+            <th:block th:replace="~{fragments/icons :: sparkles('w-6 h-6 text-white')}"></th:block>
+          </figure>
+
+          <h3 class="text-lg font-bold text-gray-900 mb-2">AI Processing</h3>
+
+          <p class="text-md text-gray-500 leading-relaxed">
+            Our AI engine analyses your data structures, relationships, and workflows to generate
+            optimized diagram layouts.
+          </p>
+        </article>
+
+        <!-- Step 3 -->
+        <article
+          class="relative bg-white self-started rounded-2xl border border-gray-200 p-7 shadow-sm"
+        >
+          <span class="text-sm font-bold text-gray-300 tracking-wider">03</span>
+
+          <figure
+            class="w-12 h-12 rounded-xl bg-orange-500 flex items-center justify-center mt-4 mb-5"
+          >
+            <th:block th:replace="~{fragments/icons :: share('w-6 h-6 text-white')}"></th:block>
+          </figure>
+
+          <h3 class="text-lg font-bold text-gray-900 mb-2">Get Your Diagram</h3>
+
+          <p class="text-md text-gray-500 leading-relaxed">
+            Receive polished, Lucidchart-compatible diagrams ready to view, edit, and share with
+            your team instantly.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Showcase -->
+    <section id="showcase" class="bg-gray-900 py-24 mt-12">
+      <div class="max-w-7xl mx-auto px-8 flex items-center gap-16">
+        <div class="flex-1 relative">
+          <figure class="relative rounded-2xl overflow-hidden shadow-2xl border border-gray-700">
+            <img
+              th:src="@{/images/workflow.png}"
+              alt="AI generated img of Analytics dashboard"
+              class="w-full h-auto object-cover rounded-2xl"
+            />
+          </figure>
+
+          <!-- Do later-->
+          <article>
+            <p>AI Gen</p>
+          </article>
+        </div>
+
+        <!-- Text content -->
+        <div class="flex-1 max-w-[480px]">
+          <h2 class="text-4xl font-extrabold tracking-tight text-white mb-4">
+            Designed to simplify complex client data.
+          </h2>
+
+          <p class="text-gray-400 text-[1.05rem] leading-relaxed mb-8">
+            For employees at Aether Automation, this tool eliminates hours of tedious drag-and-drop
+            work. Focus on analysing the architecture, not drawing the boxes.
+          </p>
+
+          <ul class="space-y-5">
+            <li class="flex items-start gap-3">
+              <figure
+                class="w-6 h-6 rounded-full bg-teal-500/20 flex items-center justify-center flex-shrink-0 mt-0.5"
+              >
+                <th:block
+                  th:replace="~{fragments/icons :: check('w-3.5 h-3.5 text-teal-400')}"
+                ></th:block>
+              </figure>
+              <div>
+                <h4 class="text-sm font-semibold text-white">Validation Included</h4>
+                <p class="text-sm text-gray-500">
+                  The LLM flags missing data points before generation.
+                </p>
+              </div>
+            </li>
+
+            <li class="flex items-start gap-3">
+              <figure
+                class="w-6 h-6 rounded-full bg-teal-500/20 flex items-center justify-center flex-shrink-0 mt-0.5"
+              >
+                <th:block
+                  th:replace="~{fragments/icons :: check('w-3.5 h-3.5 text-teal-400')}"
+                ></th:block>
+              </figure>
+              <div>
+                <h4 class="text-sm font-semibold text-white">Standardised Notation</h4>
+                <p class="text-sm text-gray-500">
+                  Ensures all diagrams follow company style guidelines.
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Integrations -->
+    <section id="integrations" class="max-w-7xl mx-auto px-8 py-24">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
+          Seamless Integration Ecosystem
+        </h2>
+
+        <p class="text-gray-500 text-[1.05rem] leading-relaxed max-w-[540px] mx-auto">
+          Connect to the tools you already use. AetherGen bridges your data source, AI engine, and
+          output platform in one unified workflow.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-3 gap-8 mb-16">
+        <article
+          class="bg-white rounded-2xl border border-gray-200 p-7 shadow-sm border-t-4 border-t-teal-500"
+        >
+          <section class="flex items-center justify-between mb-5">
+            <figure
+              class="w-12 h-12 rounded-xl bg-teal-50 border border-teal-200 flex items-center justify-center"
+            >
+              <th:block
+                th:replace="~{fragments/icons :: database('w-6 h-6 text-teal-600')}"
+              ></th:block>
+            </figure>
+
+            <span
+              class="badge bg-teal-50 text-teal-600 text-xs font-semibold border border-teal-200 px-3 py-2 rounded-lg"
+            >
+              Data Source
+            </span>
+          </section>
+
+          <h3 class="text-lg font-bold text-gray-900 mb-1">Zoho Creator</h3>
+
+          <p class="text-sm text-gray-500 leading-relaxed">
+            Pull application data, form structures, and workflow configurations directly from your
+            Zoho Creator projects via secure API access.
+          </p>
+        </article>
+
+        <!-- Google Gemini -->
+        <article
+          class="bg-white rounded-2xl border border-gray-200 p-7 shadow-sm border-t-4 border-t-violet-500"
+        >
+          <section class="flex items-center justify-between mb-5">
+            <figure
+              class="w-12 h-12 rounded-xl bg-violet-50 border border-violet-200 flex items-center justify-center"
+            >
+              <th:block
+                th:replace="~{fragments/icons :: sparkles('w-6 h-6 text-violet-600')}"
+              ></th:block>
+            </figure>
+
+            <span
+              class="badge bg-violet-50 text-violet-600 text-xs font-semibold border border-violet-200 px-3 py-2 rounded-lg"
+            >
+              AI Engine
+            </span>
+          </section>
+
+          <h3 class="text-lg font-bold text-gray-900 mb-1">Google Gemini</h3>
+
+          <p class="text-sm text-gray-500 leading-relaxed">
+            Advanced language model processing to analyse data relationships, generate optimal
+            layouts, and produce structured diagram definitions.
+          </p>
+        </article>
+
+        <!-- Lucidchart -->
+        <article
+          class="bg-white rounded-2xl border border-gray-200 p-7 shadow-sm border-t-4 border-t-orange-500"
+        >
+          <section class="flex items-center justify-between mb-5">
+            <figure
+              class="w-12 h-12 rounded-xl bg-orange-50 border border-orange-200 flex items-center justify-center"
+            >
+              <th:block
+                th:replace="~{fragments/icons :: share('w-6 h-6 text-orange-600')}"
+              ></th:block>
+            </figure>
+
+            <span
+              class="badge bg-orange-50 text-orange-600 text-xs font-semibold border border-orange-200 px-3 py-2 rounded-lg"
+            >
+              Output Platform
+            </span>
+          </section>
+
+          <h3 class="text-lg font-bold text-gray-900 mb-1">Lucidchart</h3>
+
+          <p class="text-sm text-gray-500 leading-relaxed">
+            Export polished, editable diagrams directly into Lucidchart where your team can
+            collaborate, refine, and share seamlessly.
+          </p>
+        </article>
+      </div>
+
+      <div class="flex items-center justify-center gap-4">
+        <section
+          class="flex items-center gap-3 bg-white border border-gray-200 rounded-xl px-5 py-3 shadow-sm"
+        >
+          <figure
+            class="w-8 h-8 rounded-lg bg-teal-50 border border-teal-200 flex items-center justify-center"
+          >
+            <th:block
+              th:replace="~{fragments/icons :: database('w-4 h-4 text-teal-600')}"
+            ></th:block>
+          </figure>
+          <span class="text-sm font-semibold text-gray-700">Zoho Creator</span>
+        </section>
+
+        <!-- Arrow -->
+        <figure class="flex items-center gap-2">
+          <div class="w-8 border-t-2 border-dashed border-gray-300"></div>
+          <div class="w-2.5 h-2.5 rounded-full bg-teal-400 flex-shrink-0"></div>
+          <div class="w-8 border-t-2 border-dashed border-gray-300"></div>
+        </figure>
+
+        <section
+          class="flex items-center gap-3 bg-gray-900 border border-gray-700 rounded-xl px-5 py-3 shadow-sm"
+        >
+          <figure class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
+            <th:block th:replace="~{fragments/icons :: sparkles('w-4 h-4 text-white')}"></th:block>
+          </figure>
+          <span class="text-sm font-semibold text-white">AetherGen Core</span>
+        </section>
+
+        <!-- Arrow -->
+        <figure class="flex items-center gap-2">
+          <div class="w-8 border-t-2 border-dashed border-gray-300"></div>
+          <div class="w-2.5 h-2.5 rounded-full bg-orange-400 flex-shrink-0"></div>
+          <div class="w-8 border-t-2 border-dashed border-gray-300"></div>
+        </figure>
+
+        <section
+          class="flex items-center gap-3 bg-white border border-gray-200 rounded-xl px-5 py-3 shadow-sm"
+        >
+          <figure
+            class="w-8 h-8 rounded-lg bg-orange-50 border border-orange-200 flex items-center justify-center"
+          >
+            <th:block
+              th:replace="~{fragments/icons :: share('w-4 h-4 text-orange-600')}"
+            ></th:block>
+          </figure>
+          <span class="text-sm font-semibold text-gray-700">Lucidchart</span>
+        </section>
+
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 border-t border-gray-800">
+      <div class="max-w-7xl mx-auto px-8 py-16" id="about-us">
+        <section class="grid grid-cols-3 gap-12 mb-12">
+          <section class="col-span-1">
+            <div class="flex items-center mb-4">
+              <span class="text-md font-semibold text-white">
+                <span>Aether</span><span class="text-gray-500">Gen</span>
+              </span>
+            </div>
+            <p class="text-sm text-gray-500 leading-relaxed">
+              Transforming Zoho Creator project data into structured, professional diagrams powered
+              by AI.
+            </p>
+          </section>
+
+          <section class="col-span-1">
+            <article>
+              <h4 class="text-md font-semibold text-white mb-4">About</h4>
+              <p class="text-sm text-gray-500 leading-relaxed">
+                Employer Project for CMPT276 taught by Professor Chan. Created by Jerry, Mike, Alex,
+                Manraj, Ashwin
+              </p>
+            </article>
+          </section>
+
+          <section class="col-span-1">
+            <article>
+              <h4 class="text-md font-semibold text-white mb-4">Appreciations</h4>
+              <p class="text-sm text-gray-500 leading-relaxed">
+                Special thanks to anyone who tries our application. Feel free to check out the
+                source code located in our GitHub Repository
+              </p>
+            </article>
+          </section>
+        </section>
+
+        <!-- Bottom bar -->
+        <section class="border-t border-gray-800 pt-8 flex items-center justify-between">
+          <p class="text-sm text-gray-600">
+            2026 AetherGen. Built by Group 16 for Aether Automation.
+          </p>
+
+          <figure class="flex items-center gap-5">
+            <a
+              href="https://github.com/mbuiiiz/Lucidchart-Generator"
+              target="_blank"
+              class="text-gray-600 hover:text-gray-400 transition-colors"
+            >
+              <svg
+                class="w-5 h-5"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                />
+              </svg>
+            </a>
+          </figure>
+        </section>
+      </div>
+    </footer>
+
+    <!-- Chatbot -->
+    <section class="fixed bottom-10 right-10 z-[999]">
+      <figure
+        id="chat-icon"
+        class="w-16 h-16 bg-gray-900 rounded-full flex items-center justify-center cursor-pointer shadow-lg transform hover:scale-110 transition-transform"
+      >
+        <img
+          src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/icons/chat-dots-fill.svg"
+          alt="Chat"
+          class="w-8 h-8"
+          style="filter: invert(1)"
+        />
+      </figure>
+
+      <div
+        id="chat-popup"
+        class="hidden fixed bottom-28 right-10 w-96 h-[600px] bg-white rounded-2xl shadow-2xl border border-gray-200 flex-col transition-all duration-300 ease-in-out"
+      >
+        <section
+          class="flex items-center justify-between px-6 py-4 bg-gray-50 border-b border-gray-200 rounded-t-2xl"
+        >
           <h3 class="font-bold text-gray-900">AetherGen Assistant</h3>
           <button id="close-btn" class="text-gray-500 hover:text-gray-900">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-            </svg>
+            <th:block th:replace="~{fragments/icons :: close('w-6 h-6')}"></th:block>
           </button>
-        </div>
-        <div id="chat-box" class="flex-1 p-6 overflow-y-auto">
+        </section>
+
+        <section id="chat-box" class="flex-1 p-6 overflow-y-auto">
           <div class="chat-message incoming mb-4 flex">
             <div class="bg-gray-100 text-gray-800 rounded-lg p-3 max-w-xs">
               <p>Hello! How can I help you today?</p>
             </div>
           </div>
-        </div>
-        <div class="p-6 bg-gray-50 border-t border-gray-200 rounded-b-2xl">
+        </section>
+
+        <section class="p-6 bg-gray-50 border-t border-gray-200 rounded-b-2xl">
           <div class="flex items-center gap-3">
-            <input type="text" id="chat-input" placeholder="Ask a question..." class="min-w-0 flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-shadow">
-            <button id="send-btn" class="shrink-0 h-10 px-4 text-sm bg-gray-900 hover:bg-gray-700 text-white font-semibold rounded-lg transition-colors">Send</button>
+            <input
+              type="text"
+              id="chat-input"
+              placeholder="Ask a question..."
+              class="min-w-0 flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-shadow"
+            />
+            <button
+              id="send-btn"
+              class="shrink-0 h-10 px-4 text-sm bg-gray-900 hover:bg-gray-700 text-white font-semibold rounded-lg transition-colors"
+            >
+              Send
+            </button>
           </div>
-        </div>
+        </section>
       </div>
-    </div>
+    </section>
 
     <script src="/js/chatbot.js"></script>
   </body>
