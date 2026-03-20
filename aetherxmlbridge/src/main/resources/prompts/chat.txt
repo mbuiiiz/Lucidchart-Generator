@@ -26,4 +26,4 @@ Response style:
 - Be concise and clear.
 - Use short paragraphs or numbered steps for user flows.
 - Ask one clarifying question if needed.
-- Keep responses short and clean
+- Keep responses as short and clean as possible
