@@ -42,8 +42,7 @@
             </svg>
           </div>
           <span class="text-xl font-semibold text-gray-900">
-            <span class="font-bold">Aether</span
-            ><span class="font-normal text-gray-500">Gen</span>
+            <span class="font-bold">Aether</span><span class="font-normal text-gray-500">Gen</span>
           </span>
         </div>
 
@@ -82,12 +81,6 @@
     <!-- Hero -->
     <main class="max-w-7xl mx-auto px-8 pt-24 pb-20 flex items-center justify-between gap-16">
       <section class="max-w-[540px]">
-        <article
-          class="inline-flex items-center bg-teal-50 text-teal-700 border border-teal-200 text-xs font-bold tracking-widest uppercase rounded-md px-3 py-1.5 mb-7"
-        >
-          Internal Microservice
-        </article>
-
         <!-- Headline -->
         <h1 class="text-[3.4rem] font-extrabold leading-[1.1] tracking-tight mb-6 text-gray-900">
           Zoho Data to
@@ -381,16 +374,94 @@
       </div>
     </section>
 
+    <!-- Showcase -->
+    <section id="showcase" class="bg-gray-900 py-24 mt-12">
+      <div class="max-w-7xl mx-auto px-8 flex items-center gap-16">
+        <div class="flex-1 relative">
+          <figure class="relative rounded-2xl overflow-hidden shadow-2xl border border-gray-700">
+            <img
+              th:src="@{/images/workflow.png}"
+              alt="AI generated img of Analytics dashboard"
+              class="w-full h-auto object-cover rounded-2xl"
+            />
+          </figure>
+
+          <!-- Do later-->
+          <article>
+            <p>AI Gen</p>
+          </article>
+        </div>
+
+        <!-- Text content -->
+        <div class="flex-1 max-w-[480px]">
+          <h2 class="text-4xl font-extrabold tracking-tight text-white mb-4">
+            Designed to simplify complex client data.
+          </h2>
+
+          <p class="text-gray-400 text-[1.05rem] leading-relaxed mb-8">
+            For employees at Aether Automation, this tool eliminates hours of tedious drag-and-drop
+            work. Focus on analysing the architecture, not drawing the boxes.
+          </p>
+
+          <ul class="space-y-5">
+            <li class="flex items-start gap-3">
+              <figure
+                class="w-6 h-6 rounded-full bg-teal-500/20 flex items-center justify-center flex-shrink-0 mt-0.5"
+              >
+                <svg
+                  class="w-3.5 h-3.5 text-teal-400"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                  stroke="currentColor"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                </svg>
+              </figure>
+              <div>
+                <h4 class="text-sm font-semibold text-white">Validation Included</h4>
+                <p class="text-sm text-gray-500">
+                  The LLM flags missing data points before generation.
+                </p>
+              </div>
+            </li>
+
+            <li class="flex items-start gap-3">
+              <figure
+                class="w-6 h-6 rounded-full bg-teal-500/20 flex items-center justify-center flex-shrink-0 mt-0.5"
+              >
+                <svg
+                  class="w-3.5 h-3.5 text-teal-400"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                  stroke="currentColor"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                </svg>
+              </figure>
+              <div>
+                <h4 class="text-sm font-semibold text-white">Standardised Notation</h4>
+                <p class="text-sm text-gray-500">
+                  Ensures all diagrams follow company style guidelines.
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
     <!-- Footer -->
     <footer class="bg-gray-900 border-t border-gray-800">
       <div class="max-w-7xl mx-auto px-8 py-16" id="about-us">
         <section class="grid grid-cols-3 gap-12 mb-12">
-
           <section class="col-span-1">
             <div class="flex items-center mb-4">
               <span class="text-md font-semibold text-white">
-                <span>Aether</span
-                ><span class="text-gray-500">Gen</span>
+                <span>Aether</span><span class="text-gray-500">Gen</span>
               </span>
             </div>
             <p class="text-sm text-gray-500 leading-relaxed">
@@ -413,8 +484,8 @@
             <article>
               <h4 class="text-md font-semibold text-white mb-4">Appreciations</h4>
               <p class="text-sm text-gray-500 leading-relaxed">
-                Special thanks to anyone who tries our application. Feel free to check out the source code located in
-                our GitHub Repository
+                Special thanks to anyone who tries our application. Feel free to check out the
+                source code located in our GitHub Repository
               </p>
             </article>
           </section>
@@ -427,7 +498,11 @@
           </p>
 
           <figure class="flex items-center gap-5">
-            <a href="https://github.com/mbuiiiz/Lucidchart-Generator" target="_blank" class="text-gray-600 hover:text-gray-400 transition-colors">
+            <a
+              href="https://github.com/mbuiiiz/Lucidchart-Generator"
+              target="_blank"
+              class="text-gray-600 hover:text-gray-400 transition-colors"
+            >
               <svg
                 class="w-5 h-5"
                 xmlns="http://www.w3.org/2000/svg"
