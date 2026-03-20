@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <body>
+    <!-- Brand globe icon - used in index.html, dashboard.html, admin-users.html -->
+    <svg
+      th:fragment="brandGlobe(iconClass)"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      th:class="${iconClass}"
+      stroke="currentColor"
+      stroke-width="1.5"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418"
+      />
+    </svg>
+
+    <!-- Eye icon - used in login.html, register.html -->
+    <svg
+      th:fragment="eye(iconClass, iconId)"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      stroke-width="2"
+      th:class="${iconClass}"
+      th:id="${iconId}"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+      />
+    </svg>
+
+    <!-- Eye off icon - used in login.html, register.html -->
+    <svg
+      th:fragment="eyeOff(iconClass, iconId)"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      stroke-width="2"
+      th:class="${iconClass}"
+      th:id="${iconId}"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a9.97 9.97 0 012.222-3.592M6.938 6.938A9.953 9.953 0 0112 5c4.477 0 8.268 2.943 9.542 7a9.97 9.97 0 01-2.222 3.593M6.938 6.938L3 3m3.938 3.938l10.124 10.124M17.062 17.062L21 21"
+      />
+    </svg>
+
+    <!-- Google icon - used in login.html, register.html -->
+    <svg th:fragment="google" viewBox="0 0 24 24">
+      <path
+        fill="#4285F4"
+        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+      />
+      <path
+        fill="#34A853"
+        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+      />
+      <path
+        fill="#FBBC05"
+        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+      />
+      <path
+        fill="#EA4335"
+        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+      />
+    </svg>
+
+    <!-- Database icon - used in index.html -->
+    <svg
+      th:fragment="database(iconClass)"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      th:class="${iconClass}"
+      stroke="currentColor"
+      stroke-width="1.5"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125"
+      />
+    </svg>
+
+    <!-- Sparkles icon - used in index.html -->
+    <svg
+      th:fragment="sparkles(iconClass)"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      th:class="${iconClass}"
+      stroke="currentColor"
+      stroke-width="1.5"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z"
+      />
+    </svg>
+
+    <!-- Share nodes icon - used in index.html -->
+    <svg
+      th:fragment="share(iconClass)"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      th:class="${iconClass}"
+      stroke="currentColor"
+      stroke-width="1.5"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z"
+      />
+    </svg>
+
+    <!-- Arrow right icon - used in index.html -->
+    <svg
+      th:fragment="arrowRight(iconClass)"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      th:class="${iconClass}"
+      stroke="currentColor"
+      stroke-width="1.5"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+      />
+    </svg>
+
+    <!-- Check icon - used in index.html -->
+    <svg
+      th:fragment="check(iconClass)"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      th:class="${iconClass}"
+      stroke="currentColor"
+      stroke-width="2"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+    </svg>
+
+    <!-- Close icon - used in index.html -->
+    <svg
+      th:fragment="close(iconClass)"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      th:class="${iconClass}"
+      stroke="currentColor"
+      stroke-width="1.5"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+    </svg>
+
+    <!-- Home icon - used in dashboard.html, admin-users.html -->
+    <svg
+      th:fragment="home(iconClass)"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      th:class="${iconClass}"
+      stroke="currentColor"
+      stroke-width="1.5"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
+      />
+    </svg>
+
+    <!-- User circle icon - used in dashboard.html, admin-users.html -->
+    <svg
+      th:fragment="userCircle(iconClass)"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      th:class="${iconClass}"
+      stroke="currentColor"
+      stroke-width="1.5"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M16.5 7.5a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM4.5 20.25a7.5 7.5 0 0 1 15 0"
+      />
+    </svg>
+
+    <!-- Logout icon - used in dashboard.html, admin-users.html -->
+    <svg
+      th:fragment="logout(iconClass)"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      th:class="${iconClass}"
+      stroke="currentColor"
+      stroke-width="1.5"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"
+      />
+    </svg>
+
+    <!-- Folder icon - used in dashboard.html -->
+    <svg
+      th:fragment="folder(iconClass)"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      th:class="${iconClass}"
+      stroke="currentColor"
+      stroke-width="1.5"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z"
+      />
+    </svg>
+  </body>
+</html>
