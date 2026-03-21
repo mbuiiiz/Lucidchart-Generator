@@ -67,5 +67,29 @@ public class PageController {
     return "dashboard";
   }
 
+@GetMapping("/profile")
+public String getProfilePage(Model model, Principal principal) {
+
+  if (principal != null) {
+    String email;
+    if (principal instanceof OAuth2AuthenticationToken oauthToken) {
+      OAuth2User oauthUser = oauthToken.getPrincipal();
+      email = oauthUser.getAttribute("Email");
+      if (email == null) {
+        email = oauthUser.getAttribute("email");
+      }
+    } else {
+      email = principal.getName();
+    }
+
+    if (email != null) {
+      AppUser user = appUserRepository.findByEmail(email).orElse(null);
+      model.addAttribute("currentUser", user);
+    }
+  }
+
+  return "profile";
+}
+
 }
 
