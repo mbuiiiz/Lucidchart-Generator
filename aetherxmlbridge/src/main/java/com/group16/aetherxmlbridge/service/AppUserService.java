@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 @Service
 @RequiredArgsConstructor
 public class AppUserService implements UserDetailsService {
@@ -29,9 +30,9 @@ public class AppUserService implements UserDetailsService {
             throw new IllegalArgumentException("Email already registered: " + email);
         }
     
-        // DEV ONLY Hardcoded account with admin role
+        // DEV ONLY 
         
-        String assignedRole = email.equalsIgnoreCase("admin@gmail.com")
+        String assignedRole = email.equalsIgnoreCase("a@a.com")
                 ? "ROLE_ADMIN"
                 : "ROLE_USER";
         
@@ -48,4 +49,34 @@ public class AppUserService implements UserDetailsService {
     
         return appUserRepository.save(newUser);
     }
+
+    @Transactional
+    public void updateFullName(String email, String newFullName) {
+        AppUser user = appUserRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
+
+        user.setFullName(newFullName);
+        appUserRepository.save(user);
+    }
+
+    @Transactional
+    public void updatePhoneNumber(String email, String phoneNumber) {
+        AppUser user = appUserRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
+
+        user.setPhoneNumber(phoneNumber);
+        appUserRepository.save(user);
+    }
+
+    @Transactional
+    public void deleteAccount(String email, String rawPassword) {
+        AppUser user = appUserRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
+
+        if (!passwordEncoder.matches(rawPassword, user.getPasswordHash())) {
+            throw new IllegalArgumentException("Incorrect password");
+        }
+
+        appUserRepository.delete(user);
+}
 }
