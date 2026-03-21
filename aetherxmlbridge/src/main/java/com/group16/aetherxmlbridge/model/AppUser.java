@@ -49,6 +49,9 @@ public class AppUser implements UserDetails {
     @Column(nullable = false)
     private String passwordHash;
 
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
     @Builder.Default
     @Column(nullable = false)
     private String role = "ROLE_USER";
