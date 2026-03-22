@@ -6,13 +6,11 @@ const chatInput = document.getElementById('chat-input');
 const sendBtn = document.getElementById('send-btn');
 
 chatIcon.addEventListener('click', () => {
-    chatPopup.classList.toggle('hidden');
-    chatPopup.classList.toggle('flex');
+    chatPopup.classList.toggle('open');
 });
 
 closeBtn.addEventListener('click', () => {
-    chatPopup.classList.add('hidden');
-    chatPopup.classList.remove('flex');
+    chatPopup.classList.remove('open');
 });
 
 sendBtn.addEventListener('click', sendMessage);
@@ -60,11 +58,11 @@ function sendMessage() {
     }
 }
 
-// Creates your message 
+// Creates your message
 function addMessageToChatBox(type, message) {
     const chatMessage = document.createElement('div');
     chatMessage.classList.add('chat-message', 'mb-4', 'flex');
-    
+
     const messageBubble = document.createElement('div');
     if (type === 'outgoing') {
         chatMessage.classList.add('justify-end');
