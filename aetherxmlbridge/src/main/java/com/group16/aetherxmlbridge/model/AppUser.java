@@ -59,6 +59,25 @@ public class AppUser implements UserDetails {
     @Builder.Default
     @Column(nullable = false)
     private Instant createdAt = Instant.now();
+    
+    /**
+     * 3 things zoho's token return 
+     * 
+     * eg: 
+     * {
+     *  "access_token": 
+     *  "refresh_token":
+     *  "expires_in":   
+     * }
+     */
+    @Column(name = "zoho_access_token", length = 2048)
+    private String zohoAccessToken;
+
+    @Column(name = "zoho_refresh_token", length = 2048)
+    private String zohoRefreshToken;
+
+    @Column(name = "zoho_token_expiry")
+    private Instant zohoTokenExpiry;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
