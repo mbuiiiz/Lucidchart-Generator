@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizationRequestResolver;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestResolver;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -25,7 +27,7 @@ public class ProdSecurityConfig {
         .csrf(csrf -> csrf.disable()) // enable this for future production
         .authorizeHttpRequests(auth -> {
             auth.requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
-                .requestMatchers("/h2-console/**").permitAll()
+                // .requestMatchers("/h2-console/**").permitAll() // dev only — do not expose in production
                 .requestMatchers("/", "/login", "/register", "/error", "/error/**").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN");
             
@@ -63,8 +65,15 @@ public class ProdSecurityConfig {
 
     // Configure OAuth2 login if available
     if (oauthEnabled) {
+      ClientRegistrationRepository repo = clientRegistrationRepository.getIfAvailable();
+
+      // custom resolver that adds access_type=offline so Zoho returns a refresh token
+      DefaultOAuth2AuthorizationRequestResolver resolver = new DefaultOAuth2AuthorizationRequestResolver(repo, "/oauth2/authorization");
+      resolver.setAuthorizationRequestCustomizer(customizer -> customizer.additionalParameters(params -> params.put("access_type", "offline")));
+
       http.oauth2Login(oauth -> oauth
               .loginPage("/login")
+              .authorizationEndpoint(ep -> ep.authorizationRequestResolver(resolver))
               .successHandler(oAuthLoginSuccessHandler)
           );
     }

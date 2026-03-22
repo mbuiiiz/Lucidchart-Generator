@@ -12,20 +12,27 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.time.Instant;
 
 @Component
 public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final AppUserRepository appUserRepository;
+    private final OAuth2AuthorizedClientService authorizedClientService;
 
-    public OAuthLoginSuccessHandler(AppUserRepository appUserRepository) {
+    public OAuthLoginSuccessHandler(AppUserRepository appUserRepository,
+                                    @org.jspecify.annotations.Nullable OAuth2AuthorizedClientService authorizedClientService) {
         super("/dashboard");
         this.appUserRepository = appUserRepository;
+        this.authorizedClientService = authorizedClientService;
     }
 
     @Override
@@ -57,7 +64,8 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         if (email != null) {
             final String finalEmail = email;
             final String finalFullName = fullName;
-            appUserRepository.findByEmail(email).orElseGet(() -> {
+
+            AppUser user = appUserRepository.findByEmail(email).orElseGet(() -> {
                 AppUser newUser = AppUser.builder()
                         .email(finalEmail)
                         .fullName(finalFullName)
@@ -66,6 +74,31 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
                         .build();
                 return appUserRepository.save(newUser);
             });
+
+            // save Zoho tokens so we can call Zoho Creator API later
+            if (authorizedClientService != null
+                    && authentication instanceof OAuth2AuthenticationToken oauthToken
+                    && "zoho".equals(oauthToken.getAuthorizedClientRegistrationId())) {
+                // retrieve Zoho token data saved in Spring memory after Zoho oauth
+                OAuth2AuthorizedClient client = authorizedClientService.loadAuthorizedClient("zoho", oauthToken.getName());
+                
+                if (client != null && client.getAccessToken() != null) {
+                    // access token
+                    user.setZohoAccessToken(client.getAccessToken().getTokenValue());
+                    // expiry
+                    if(client.getAccessToken().getExpiresAt() != null){
+                        user.setZohoTokenExpiry(client.getAccessToken().getExpiresAt());
+                    }else{
+                        user.setZohoTokenExpiry(Instant.now().plusSeconds(3600));
+                    }
+                    // refresh token
+                    if (client.getRefreshToken() != null) {
+                        user.setZohoRefreshToken(client.getRefreshToken().getTokenValue());
+                    }
+                    // save user
+                    appUserRepository.save(user);
+                }
+            }
         }
 
         super.onAuthenticationSuccess(request, response, authentication);
