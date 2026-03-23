@@ -332,11 +332,12 @@
   
                 <div class="flex flex-wrap gap-3">
                   <button
-                    class="btn bg-gray-900 hover:bg-gray-700 text-white border-none rounded-lg font-medium px-6"
                     type="button"
+                    onclick="openPasswordModal()"
+                    class="btn bg-gray-900 hover:bg-gray-700 text-white border-none rounded-lg font-medium px-6"
                   >
-                    Change Password (WiP)
-                  </button>
+                    Change Password
+                </button>
   
                   <button
                     class="btn btn-outline border-gray-300 text-gray-700 hover:bg-gray-50 rounded-lg font-medium px-6 bg-white"
@@ -345,6 +346,9 @@
                     Change Avatar (WiP)
                   </button>
                 </div>
+                <p th:if="${passwordSuccess}" class="text-sm text-green-600 mt-3">
+                  <span th:text="${passwordSuccess}"></span>
+                </p>
               </section>
   
               <section class="bg-white border border-red-100 rounded-xl p-6 shadow-sm">
@@ -403,7 +407,24 @@
           </div>
         </main>
       </div>
-      <script>
+
+      <script th:inline="javascript">
+        function togglePasswordField(inputId, eyeId, eyeOffId) {
+          const input = document.getElementById(inputId);
+          const eyeIcon = document.getElementById(eyeId);
+          const eyeOffIcon = document.getElementById(eyeOffId);
+
+          if (input.type === "password") {
+            input.type = "text";
+            eyeIcon.classList.add("hidden");
+            eyeOffIcon.classList.remove("hidden");
+          } else {
+            input.type = "password";
+            eyeIcon.classList.remove("hidden");
+            eyeOffIcon.classList.add("hidden");
+          }
+        }
+
         function toggleEdit(button, isEditing) {
           const container = button.closest(".editable-card");
       
@@ -418,6 +439,118 @@
           document.getElementById("deleteAccountView").classList.toggle("hidden", isEditing);
           document.getElementById("deleteAccountConfirm").classList.toggle("hidden", !isEditing);
         }
+      
+        function openPasswordModal() {
+          const modal = document.getElementById("passwordModal");
+          modal.classList.remove("hidden");
+          modal.classList.add("flex");
+        }
+      
+        function closePasswordModal() {
+          const modal = document.getElementById("passwordModal");
+          modal.classList.add("hidden");
+          modal.classList.remove("flex");
+        }
+      
+        document.addEventListener("DOMContentLoaded", function () {
+          const hasPasswordError = /*[[${passwordError != null}]]*/ false;
+          const hasDeleteError = /*[[${deleteError != null}]]*/ false;
+      
+          if (hasPasswordError) {
+            openPasswordModal();
+          }
+      
+          if (hasDeleteError) {
+            toggleDeleteAccount(true);
+          }
+        });
+
+        
       </script>
+      
+      <div id="passwordModal" class="fixed inset-0 bg-black/40 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-6 w-full max-w-md shadow-lg">
+      
+          <h2 class="text-lg font-semibold mb-4">Change Password</h2>
+      
+          <form th:action="@{/profile/change-password}" method="post" class="space-y-3">
+      
+            <!-- OLD PASSWORD -->
+            <section class="relative w-full">
+              <input
+                type="password"
+                name="oldPassword"
+                placeholder="Old password"
+                class="input input-bordered w-full pr-10"
+                id="oldPasswordInput"
+                required
+              />
+              <button type="button"
+                onclick="togglePasswordField('oldPasswordInput','oldEyeIcon','oldEyeOffIcon')"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+                
+                <th:block th:replace="~{fragments/icons :: eye('h-5 w-5', 'oldEyeIcon')}"></th:block>
+                <th:block th:replace="~{fragments/icons :: eyeOff('h-5 w-5 hidden', 'oldEyeOffIcon')}"></th:block>
+              </button>
+            </section>
+
+            <!-- NEW PASSWORD -->
+            <section class="relative w-full">
+              <input
+                type="password"
+                name="newPassword"
+                placeholder="New password"
+                class="input input-bordered w-full pr-10"
+                id="newPasswordInput"
+                required
+              />
+              <button type="button"
+                onclick="togglePasswordField('newPasswordInput','newEyeIcon','newEyeOffIcon')"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+                
+                <th:block th:replace="~{fragments/icons :: eye('h-5 w-5', 'newEyeIcon')}"></th:block>
+                <th:block th:replace="~{fragments/icons :: eyeOff('h-5 w-5 hidden', 'newEyeOffIcon')}"></th:block>
+              </button>
+            </section>
+
+            <!-- REPEAT PASSWORD -->
+            <section class="relative w-full">
+              <input
+                type="password"
+                name="repeatPassword"
+                placeholder="Repeat new password"
+                class="input input-bordered w-full pr-10"
+                id="repeatPasswordInput"
+                required
+              />
+              <button type="button"
+                onclick="togglePasswordField('repeatPasswordInput','repeatEyeIcon','repeatEyeOffIcon')"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+                
+                <th:block th:replace="~{fragments/icons :: eye('h-5 w-5', 'repeatEyeIcon')}"></th:block>
+                <th:block th:replace="~{fragments/icons :: eyeOff('h-5 w-5 hidden', 'repeatEyeOffIcon')}"></th:block>
+              </button>
+            </section>
+      
+            <p th:if="${passwordError}" class="text-red-500 text-sm">
+              <span th:text="${passwordError}"></span>
+            </p>
+      
+            <div class="flex gap-2 pt-2">
+              <button type="submit"
+                class="btn bg-gray-900 text-white px-4">
+                Save
+              </button>
+      
+              <button type="button"
+                onclick="closePasswordModal()"
+                class="btn btn-outline px-4">
+                Cancel
+              </button>
+            </div>
+      
+          </form>
+        </div>
+      </div>
     </body>
   </html>

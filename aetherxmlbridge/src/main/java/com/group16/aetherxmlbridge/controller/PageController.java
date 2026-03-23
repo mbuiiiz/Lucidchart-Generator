@@ -14,6 +14,8 @@ import com.group16.aetherxmlbridge.model.AppUser;
 import com.group16.aetherxmlbridge.model.ZohoProject;
 import com.group16.aetherxmlbridge.service.ZohoApiService;
 
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 /**
  * This file is for returning thymeleaf templates to the user when accessing a certain
@@ -76,29 +78,47 @@ public class PageController {
     return "dashboard";
   }
 
-@GetMapping("/profile")
-public String getProfilePage(Model model, Principal principal) {
-
-  if (principal != null) {
-    String email;
-    if (principal instanceof OAuth2AuthenticationToken oauthToken) {
-      OAuth2User oauthUser = oauthToken.getPrincipal();
-      email = oauthUser.getAttribute("Email");
-      if (email == null) {
-        email = oauthUser.getAttribute("email");
+  @GetMapping("/profile")
+  public String getProfilePage(
+      Model model,
+      Principal principal,
+      @RequestParam(value = "passwordError", required = false) String passwordError,
+      @RequestParam(value = "passwordSuccess", required = false) String passwordSuccess,
+      @RequestParam(value = "deleteError", required = false) String deleteError
+  ) {
+  
+    if (principal != null) {
+      String email;
+      if (principal instanceof OAuth2AuthenticationToken oauthToken) {
+        OAuth2User oauthUser = oauthToken.getPrincipal();
+        email = oauthUser.getAttribute("Email");
+        if (email == null) {
+          email = oauthUser.getAttribute("email");
+        }
+      } else {
+        email = principal.getName();
       }
-    } else {
-      email = principal.getName();
+  
+      if (email != null) {
+        AppUser user = appUserRepository.findByEmail(email).orElse(null);
+        model.addAttribute("currentUser", user);
+      }
     }
-
-    if (email != null) {
-      AppUser user = appUserRepository.findByEmail(email).orElse(null);
-      model.addAttribute("currentUser", user);
+  
+    if (passwordError != null) {
+      model.addAttribute("passwordError", passwordError);
     }
+  
+    if (passwordSuccess != null) {
+      model.addAttribute("passwordSuccess", "Password updated successfully");
+    }
+  
+    if (deleteError != null) {
+      model.addAttribute("deleteError", "Incorrect password");
+    }
+  
+    return "profile";
   }
-
-  return "profile";
-}
 
 }
 

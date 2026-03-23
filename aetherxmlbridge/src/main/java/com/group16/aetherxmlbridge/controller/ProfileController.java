@@ -53,4 +53,24 @@ public class ProfileController {
     
         return "redirect:/profile";
     }
+
+    @PostMapping("/profile/change-password")
+    public String changePassword(
+            @RequestParam("oldPassword") String oldPassword,
+            @RequestParam("newPassword") String newPassword,
+            @RequestParam("repeatPassword") String repeatPassword,
+            Principal principal) {
+    
+        try {
+            if (!newPassword.equals(repeatPassword)) {
+                return "redirect:/profile?passwordError=Passwords+do+not+match";
+            }
+    
+            appUserService.changePassword(principal.getName(), oldPassword, newPassword);
+            return "redirect:/profile?passwordSuccess=1";
+    
+        } catch (IllegalArgumentException e) {
+            return "redirect:/profile?passwordError=" + e.getMessage().replace(" ", "+");
+        }
+    }
 }
