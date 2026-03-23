@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.group16.aetherxmlbridge.model.AppUser;
 import com.group16.aetherxmlbridge.model.ZohoProject;
 import com.group16.aetherxmlbridge.repository.AppUserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,9 @@ import java.util.List;
 
 @Service
 public class ZohoApiService {
+
+    // Enable by setting logging.level.com.group16.aetherxmlbridge.service.ZohoApiService=DEBUG
+    private static final Logger log = LoggerFactory.getLogger(ZohoApiService.class);
 
     // zoho creator api config loaded from application.properties / env vars
     @Value("${zoho.creator.base-url:https://creator.zoho.com}")
@@ -77,8 +82,12 @@ public class ZohoApiService {
 
         try {
             ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+            log.info("Zoho API Response Status: {}", response.getStatusCode());
+            log.debug("Zoho API Raw JSON: {}", response.getBody());
             return parseProjects(response.getBody());
         } catch (Exception e) {
+            log.error("Failed to fetch projects from Zoho API", e);
+            log.error("URL attempted: {}", url);
             return Collections.emptyList();
         }
     }
@@ -102,6 +111,7 @@ public class ZohoApiService {
         try {
             // post to zoho token endpoint and get response
             ResponseEntity<String> response = restTemplate.postForEntity(tokenUrl, entity, String.class);
+            log.debug("Token refresh response: {}", response.getBody());
             // parse the json response body
             JsonNode root = objectMapper.readTree(response.getBody());
             // extract new access token and expiry from response
@@ -114,7 +124,8 @@ public class ZohoApiService {
                 user.setZohoTokenExpiry(Instant.now().plusSeconds(expiresIn));
                 appUserRepository.save(user);
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            log.error("Failed to refresh Zoho access token for user: {}", user.getEmail(), e);
             // continue with existing token
         }
     }
@@ -139,7 +150,9 @@ public class ZohoApiService {
                     projects.add(project);
                 }
             }
-        } catch (Exception ignored) {
+            log.info("Successfully parsed {} projects from Zoho response", projects.size());
+        } catch (Exception e) {
+            log.error("Raw JSON that failed to parse: {}", json);
         }
         return projects;
     }
