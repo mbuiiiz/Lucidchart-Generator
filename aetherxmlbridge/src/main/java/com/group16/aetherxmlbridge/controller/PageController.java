@@ -16,7 +16,6 @@ import com.group16.aetherxmlbridge.service.ZohoApiService;
 
 import org.springframework.web.bind.annotation.RequestParam;
 
-
 /**
  * This file is for returning thymeleaf templates to the user when accessing a certain
  * path, do not put auth & data processing endpoints in here please
@@ -120,5 +119,24 @@ public class PageController {
     return "profile";
   }
 
+  @GetMapping("/forgot-password")
+  public String getForgotPasswordPage() {
+      return "forgot-password";
+  }
+
+  @GetMapping("/reset-password")
+  public String getResetPasswordPage(
+      @RequestParam(value = "token", required = false) String token,
+      @RequestParam(value = "error", required = false) String error,
+      Model model
+  ) {
+      model.addAttribute("token", token);
+  
+      if (error != null) {
+          model.addAttribute("error", error);
+      }
+  
+      return "reset-password";
+  }
 }
 

@@ -8,4 +8,8 @@ import com.group16.aetherxmlbridge.model.AppUser;
 public interface AppUserRepository extends JpaRepository<AppUser, Long> { 
 
   Optional<AppUser> findByEmail(String email); // Find a user by email if present.
+
+  Optional<AppUser> findByResetToken(String resetToken);
 }
+
+
