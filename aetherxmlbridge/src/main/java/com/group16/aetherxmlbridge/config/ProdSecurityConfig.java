@@ -79,4 +79,5 @@ public SecurityFilterChain securityFilterChain(
     }
 
     return http.build();
+    }
 }
