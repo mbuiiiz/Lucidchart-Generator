@@ -126,7 +126,32 @@ public class PageController {
    * where there is more detail
    */
   @GetMapping("/projects")
-  public String getAllProjects(){
+  public String getAllProjects(Model model, Principal principal){
+    if (principal != null) {
+      String email;
+      if (principal instanceof OAuth2AuthenticationToken oauthToken) {
+        // OAuth2 users: principal.getName() returns the subject ID, not email
+        OAuth2User oauthUser = oauthToken.getPrincipal();
+        email = oauthUser.getAttribute("Email"); // Zoho uses "Email"
+        if (email == null) {
+          email = oauthUser.getAttribute("email"); // Google uses "email"
+        }
+      } else {
+        email = principal.getName(); // form login uses email as username
+      }
+
+      if (email != null) {
+        AppUser user = appUserRepository.findByEmail(email).orElse(null);
+        model.addAttribute("currentUser", user);
+
+        // is zoho connected attribute
+        model.addAttribute("zohoConnected", user != null && user.getZohoAccessToken() != null);
+        // fetch projects from zoho
+        List<ZohoProject> projects = zohoApiService.fetchProjects(user);
+        // project attribute for render in dashboard
+        model.addAttribute("projects", projects);
+      }
+    }
     return "projects";
   }
 

@@ -1,6 +1,8 @@
 <!doctype html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -14,7 +16,7 @@
       href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&amp;display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" th:href="@{/css/dashboard.css}"/>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}" />
 
     <title>Dashboard - AetherGen</title>
   </head>
@@ -52,7 +54,7 @@
             </li>
             <li>
               <a
-                href="#"
+                th:href="@{/projects}"
                 class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-500 hover:bg-gray-50 hover:text-gray-900 transition-colors"
               >
                 <th:block th:replace="~{fragments/icons :: folder('size-5')}"></th:block>
@@ -73,29 +75,35 @@
 
         <!-- User Section & Logout -->
         <section class="p-4 border-t border-gray-100">
-
-          <a th:href="@{/profile}"
-             class="flex items-center gap-3 px-4 py-3 mb-2 rounded-lg hover:bg-gray-50 transition cursor-pointer">
-             <figure class="shrink-0  w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-              <span class="text-sm font-semibold text-gray-600"
-                    th:text="${currentUser.fullName != null and !#strings.isEmpty(currentUser.fullName) ? #strings.substring(currentUser.fullName,0,1) : 'U'}">
+          <a
+            th:href="@{/profile}"
+            class="flex items-center gap-3 px-4 py-3 mb-2 rounded-lg hover:bg-gray-50 transition cursor-pointer"
+          >
+            <figure
+              class="shrink-0 w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center"
+            >
+              <span
+                class="text-sm font-semibold text-gray-600"
+                th:text="${currentUser.fullName != null and !#strings.isEmpty(currentUser.fullName) ? #strings.substring(currentUser.fullName,0,1) : 'U'}"
+              >
                 U
               </span>
             </figure>
-        
+
             <div class="flex-1 min-w-0">
-              <p class="text-sm font-semibold text-gray-900 truncate"
-                 th:text="${currentUser.fullName}">
+              <p
+                class="text-sm font-semibold text-gray-900 truncate"
+                th:text="${currentUser.fullName}"
+              >
                 User Name
               </p>
-        
-              <p class="text-xs text-gray-500 truncate"
-                 th:text="${currentUser.email}">
+
+              <p class="text-xs text-gray-500 truncate" th:text="${currentUser.email}">
                 user@email.com
               </p>
             </div>
           </a>
-        
+
           <form th:action="@{/logout}" method="post">
             <button
               class="w-full btn btn-sm bg-gray-900 hover:bg-gray-700 text-white border-none rounded-lg font-medium shadow-sm flex items-center justify-center gap-2"
@@ -112,22 +120,22 @@
       <main class="flex-1 overflow-auto">
         <header class="bg-white/80 backdrop-blur-md sticky top-0 z-40 border-b border-gray-100">
           <div class="px-8 py-3 flex items-center justify-between">
-        
             <div>
               <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
               <p class="text-sm text-gray-500 mt-1">
                 Welcome back! Manage your Zoho projects and generate diagrams.
               </p>
             </div>
-        
+
             <!-- ADMIN BUTTON -->
             <div th:if="${currentUser != null and currentUser.role == 'ROLE_ADMIN'}">
-              <a th:href="@{/admin/users}"
-                class="btn bg-gray-900 hover:bg-gray-700 text-white border-none rounded-lg font-medium px-5">
+              <a
+                th:href="@{/admin/users}"
+                class="btn bg-gray-900 hover:bg-gray-700 text-white border-none rounded-lg font-medium px-5"
+              >
                 Manage Users
               </a>
             </div>
-        
           </div>
         </header>
 
@@ -139,11 +147,17 @@
               <section class="flex items-center justify-between mb-2">
                 <h3 class="text-sm font-medium text-gray-500">Total Projects</h3>
                 <figure class="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
-                  <th:block th:replace="~{fragments/icons :: folder('size-4 text-gray-600')}"></th:block>
+                  <th:block
+                    th:replace="~{fragments/icons :: folder('size-4 text-gray-600')}"
+                  ></th:block>
                 </figure>
               </section>
-              <p class="text-2xl font-bold text-gray-900"
-                 th:text="${projects != null ? #lists.size(projects) : 0}">0</p>
+              <p
+                class="text-2xl font-bold text-gray-900"
+                th:text="${projects != null ? #lists.size(projects) : 0}"
+              >
+                0
+              </p>
               <p class="text-xs text-gray-400 mt-2">From Zoho Creator</p>
             </section>
 
@@ -151,7 +165,9 @@
               <section class="flex items-center justify-between mb-2">
                 <h3 class="text-sm font-medium text-gray-500">Diagrams Generated</h3>
                 <figure class="w-8 h-8 bg-teal-50 rounded-lg flex items-center justify-center">
-                  <th:block th:replace="~{fragments/icons :: checkCircle('size-4 text-teal-600')}"></th:block>
+                  <th:block
+                    th:replace="~{fragments/icons :: checkCircle('size-4 text-teal-600')}"
+                  ></th:block>
                 </figure>
               </section>
               <p class="text-2xl font-bold text-gray-900">0</p>
@@ -162,7 +178,9 @@
               <section class="flex items-center justify-between mb-2">
                 <h3 class="text-sm font-medium text-gray-500">API Status</h3>
                 <figure class="w-8 h-8 bg-green-50 rounded-lg flex items-center justify-center">
-                  <th:block th:replace="~{fragments/icons :: signal('size-4 text-green-600')}"></th:block>
+                  <th:block
+                    th:replace="~{fragments/icons :: signal('size-4 text-green-600')}"
+                  ></th:block>
                 </figure>
               </section>
               <p class="text-2xl font-bold text-gray-900">Connected</p>
@@ -179,7 +197,7 @@
                   Select a project to generate a Lucidchart diagram
                 </p>
               </article>
-              
+
               <button
                 class="btn btn-sm bg-gray-900 hover:bg-gray-700 text-white border-none rounded-lg font-medium px-4 flex items-center gap-2"
               >
@@ -189,85 +207,89 @@
             </section>
 
             <section class="p-6">
-
               <!-- Not connected to Zoho -->
-              <section th:if="${!zohoConnected}" class="p-6 flex flex-col items-center justify-center text-center">
-                <figure class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                  <th:block th:replace="~{fragments/icons :: folder('size-10 text-gray-400')}"></th:block>
+              <section
+                th:if="${!zohoConnected}"
+                class="p-6 flex flex-col items-center justify-center text-center"
+              >
+                <figure
+                  class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-4"
+                >
+                  <th:block
+                    th:replace="~{fragments/icons :: folder('size-10 text-gray-400')}"
+                  ></th:block>
                 </figure>
                 <h3 class="text-lg font-semibold text-gray-900 mb-2">Zoho Account Not Connected</h3>
                 <p class="text-gray-500 max-w-md mb-6">
                   Log in with your Zoho account to load your projects from Zoho Creator.
                 </p>
-                <a th:href="@{/oauth2/authorization/zoho}"
-                  class="btn bg-gray-900 hover:bg-gray-700 text-white border-none rounded-lg font-medium px-6">
+                <a
+                  th:href="@{/oauth2/authorization/zoho}"
+                  class="btn bg-gray-900 hover:bg-gray-700 text-white border-none rounded-lg font-medium px-6"
+                >
                   Connect Zoho Account
                 </a>
               </section>
 
               <!-- Connected but no projects found -->
-              <section th:if="${zohoConnected and #lists.isEmpty(projects)}"
-                class="p-6 flex flex-col items-center justify-center text-center">
+              <section
+                th:if="${zohoConnected and #lists.isEmpty(projects)}"
+                class="p-6 flex flex-col items-center justify-center text-center"
+              >
                 <h3 class="text-lg font-semibold text-gray-900 mb-2">No Projects Found</h3>
                 <p class="text-gray-500 max-w-md">
-                  Your Zoho account is connected but no projects were returned. Check your Zoho Creator configuration.
+                  Your Zoho account is connected but no projects were returned. Check your Zoho
+                  Creator configuration.
                 </p>
               </section>
 
               <!-- Project list -->
-              <!-- 
-                LIMITATION: Only displaying the first 10 projects on the dashboard for better UX.
-                The API still fetches ALL projects from Zoho, but we limit the display here.
-                Users can click "See All Projects" to view the complete list (feature not yet implemented).
-              -->
               <div th:if="${zohoConnected and !#lists.isEmpty(projects)}" class="space-y-3">
-                <div th:each="project, iterStat : ${projects}"
+                <div
+                  th:each="project, iterStat : ${projects}"
                   th:if="${iterStat.index < 10}"
-                  class="border border-gray-200 rounded-lg p-4 hover:border-gray-300 hover:shadow-sm transition-all">
+                  class="border border-gray-200 rounded-lg p-4 hover:border-gray-300 hover:shadow-sm transition-all"
+                >
                   <div class="flex items-center justify-between">
-                    <div class="flex-1">
-                      <h4 class="font-semibold text-gray-900" th:text="${project.dealName}">Project Name</h4>
+                    <section class="flex-1">
+                      <h4 class="font-semibold text-gray-900" th:text="${project.dealName}">
+                        Project Name
+                      </h4>
+
                       <p class="text-sm text-gray-500 mt-1">
-                        <span th:if="${project.stage != null and !#strings.isEmpty(project.stage)}"
-                          th:text="'Stage: ' + ${project.stage}">Stage</span>
-                        <span th:if="${project.productPurpose != null and !#strings.isEmpty(project.productPurpose)}"
-                          th:text="' • ' + ${project.productPurpose}"></span>
+                        <span
+                          th:if="${project.stage != null and !#strings.isEmpty(project.stage)}"
+                          th:text="'Stage: ' + ${project.stage}"
+                          >Stage</span
+                        >
                       </p>
-                    </div>
-                    <form th:action="@{/generate-diagram}" method="post">
-                      <input type="hidden" name="projectId" th:value="${project.id}" />
-                      <input type="hidden" name="dealName" th:value="${project.dealName}" />
-                      <input type="hidden" name="stage" th:value="${project.stage}" />
-                      <input type="hidden" name="companyContext" th:value="${project.companyContext}" />
-                      <input type="hidden" name="productPurpose" th:value="${project.productPurpose}" />
-                      <input type="hidden" name="productionNotes" th:value="${project.productionNotes}" />
-                      <input type="hidden" name="customerConcerns" th:value="${project.customerConcerns}" />
-                      <button type="submit"
-                        class="btn btn-sm bg-gray-900 hover:bg-gray-700 text-white border-none rounded-lg font-medium px-4">
-                        Generate Diagram
-                      </button>
-                    </form>
+                    </section>
                   </div>
                 </div>
 
                 <!-- See All button - shown when there are more than 10 projects -->
-                <div th:if="${#lists.size(projects) > 10}" class="pt-4 text-center border-t border-gray-100">
-                  <button
-                    class="btn btn-outline border-gray-300 hover:bg-gray-50 text-gray-700 rounded-lg font-medium px-6">
+                <div
+                  th:if="${#lists.size(projects) > 10}"
+                  class="pt-4 text-center border-t border-gray-100"
+                >
+                  <a
+                    class="btn btn-outline border-gray-300 hover:bg-gray-50 text-gray-700 rounded-lg font-medium px-6"
+                    th:href="@{/projects}"
+                  >
                     See All Projects
-                    <span class="text-xs text-gray-500 ml-1" th:text="'(' + ${#lists.size(projects)} + ' total)'">
+                    <span
+                      class="text-xs text-gray-500 ml-1"
+                      th:text="'(' + ${#lists.size(projects)} + ' total)'"
+                    >
                       (0 total)
                     </span>
-                  </button>
+                  </a>
                 </div>
               </div>
-
             </section>
           </div>
         </div>
-          
       </main>
-
     </div>
   </body>
 </html>
