@@ -1,0 +1,188 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}" />
+
+    <title>Projects - AetherGen</title>
+  </head>
+
+  <body class="dot-bg min-h-screen">
+    <div class="flex min-h-screen">
+      <!-- Sidebar -->
+      <aside class="h-screen sticky top-0 w-64 bg-white border-r border-gray-100 flex flex-col">
+        <section class="p-6 border-b border-gray-100">
+          <section class="flex items-center gap-2.5">
+            <figure
+              class="w-8 h-8 bg-gray-900 rounded-md flex items-center justify-center text-white font-bold text-sm select-none"
+            >
+              <th:block th:replace="~{fragments/icons :: brandGlobe('size-6')}"></th:block>
+            </figure>
+            <span class="text-xl font-semibold text-gray-900">
+              <span class="font-bold">Aether</span
+              ><span class="font-normal text-gray-500">Gen</span>
+            </span>
+          </section>
+        </section>
+
+        <nav class="flex-1 p-4">
+          <ul class="space-y-2">
+            <li>
+              <a
+                th:href="@{/dashboard}"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-500 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+              >
+                <th:block th:replace="~{fragments/icons :: home('size-5')}"></th:block>
+                Dashboard
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg bg-gray-100 text-gray-900 font-medium transition-colors"
+              >
+                <th:block th:replace="~{fragments/icons :: folder('size-5')}"></th:block>
+                Projects
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-500 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+              >
+                <th:block th:replace="~{fragments/icons :: document('size-5')}"></th:block>
+                Generated Diagrams
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <section class="p-4 border-t border-gray-100">
+          <a
+            th:href="@{/profile}"
+            class="flex items-center gap-3 px-4 py-3 mb-2 rounded-lg hover:bg-gray-50 transition cursor-pointer"
+          >
+            <figure
+              class="shrink-0 w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center"
+            >
+              <span
+                class="text-sm font-semibold text-gray-600"
+                th:text="${currentUser.fullName != null and !#strings.isEmpty(currentUser.fullName) ? #strings.substring(currentUser.fullName,0,1) : 'U'}"
+                >U</span
+              >
+            </figure>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-semibold text-gray-900 truncate" th:text="${currentUser.fullName}">
+                User Name
+              </p>
+              <p class="text-xs text-gray-500 truncate" th:text="${currentUser.email}">user@email.com</p>
+            </div>
+          </a>
+          <form th:action="@{/logout}" method="post">
+            <button
+              class="w-full btn btn-sm bg-gray-900 hover:bg-gray-700 text-white border-none rounded-lg font-medium shadow-sm flex items-center justify-center gap-2"
+              type="submit"
+            >
+              <th:block th:replace="~{fragments/icons :: logout('size-4')}"></th:block>
+              Logout
+            </button>
+          </form>
+        </section>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="flex-1 overflow-auto">
+        <header class="bg-white/80 backdrop-blur-md sticky top-0 z-40 border-b border-gray-100">
+          <div class="px-8 py-3">
+            <h1 class="text-2xl font-bold text-gray-900">All Projects</h1>
+            <p class="text-sm text-gray-500 mt-1">Complete list of projects from Zoho Creator</p>
+          </div>
+        </header>
+
+        <div class="p-8">
+          <!-- Project list -->
+          <div th:if="${zohoConnected and !#lists.isEmpty(projects)}" class="space-y-3">
+            <div
+              th:each="project : ${projects}"
+              class="bg-white border border-gray-200 rounded-lg p-4 hover:border-gray-300 hover:shadow-sm transition-all"
+            >
+              <div class="flex items-center justify-between">
+                <div class="flex-1">
+                  <h4 class="font-semibold text-gray-900" th:text="${project.dealName}">
+                    Project Name
+                  </h4>
+                  <p class="text-sm text-gray-500 mt-1">
+                    <span
+                      th:if="${project.stage != null and !#strings.isEmpty(project.stage)}"
+                      th:text="'Stage: ' + ${project.stage}"
+                      >Stage</span
+                    >
+                    <span
+                      th:if="${project.productPurpose != null and !#strings.isEmpty(project.productPurpose)}"
+                      th:text="' • ' + ${project.productPurpose}"
+                    ></span>
+                  </p>
+                </div>
+                <form th:action="@{/generate-diagram}" method="post">
+                  <input type="hidden" name="projectId" th:value="${project.id}" />
+                  <input type="hidden" name="dealName" th:value="${project.dealName}" />
+                  <input type="hidden" name="stage" th:value="${project.stage}" />
+                  <input type="hidden" name="companyContext" th:value="${project.companyContext}" />
+                  <input type="hidden" name="productPurpose" th:value="${project.productPurpose}" />
+                  <input
+                    type="hidden"
+                    name="productionNotes"
+                    th:value="${project.productionNotes}"
+                  />
+                  <input
+                    type="hidden"
+                    name="customerConcerns"
+                    th:value="${project.customerConcerns}"
+                  />
+                  <button
+                    type="submit"
+                    class="btn btn-sm bg-gray-900 hover:bg-gray-700 text-white border-none rounded-lg font-medium px-4"
+                  >
+                    Generate Diagram
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Empty state -->
+          <div
+            th:if="${!zohoConnected or #lists.isEmpty(projects)}"
+            class="bg-white border border-gray-100 rounded-xl p-12 text-center"
+          >
+            <figure
+              class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4"
+            >
+              <th:block
+                th:replace="~{fragments/icons :: folder('size-10 text-gray-400')}"
+              ></th:block>
+            </figure>
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">No Projects Found</h3>
+            <p class="text-gray-500 max-w-md mx-auto">
+              Connect your Zoho account or check your Zoho Creator configuration.
+            </p>
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
