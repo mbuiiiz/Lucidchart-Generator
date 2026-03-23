@@ -78,5 +78,25 @@ public class AppUserService implements UserDetailsService {
         }
 
         appUserRepository.delete(user);
-}
+    }
+    @Transactional
+    public void changePassword(String email, String oldPassword, String newPassword) {
+        AppUser user = appUserRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
+
+        if (!passwordEncoder.matches(oldPassword, user.getPasswordHash())) {
+            throw new IllegalArgumentException("Incorrect old password");
+        }
+
+        if (newPassword == null || newPassword.trim().length() < 8) {
+            throw new IllegalArgumentException("Password must be at least 8 characters");
+        }
+
+        if (passwordEncoder.matches(newPassword, user.getPasswordHash())) {
+            throw new IllegalArgumentException("New password must be different from old password");
+        }
+
+        user.setPasswordHash(passwordEncoder.encode(newPassword.trim()));
+        appUserRepository.save(user);
+    }
 }
