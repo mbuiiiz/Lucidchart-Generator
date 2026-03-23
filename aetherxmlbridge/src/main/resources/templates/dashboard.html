@@ -83,13 +83,13 @@
               </span>
             </figure>
         
-            <div class="flex-1">
-              <p class="text-sm font-semibold text-gray-900"
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-semibold text-gray-900 truncate"
                  th:text="${currentUser.fullName}">
                 User Name
               </p>
         
-              <p class="text-xs text-gray-500"
+              <p class="text-xs text-gray-500 truncate"
                  th:text="${currentUser.email}">
                 user@email.com
               </p>
@@ -215,8 +215,14 @@
               </section>
 
               <!-- Project list -->
+              <!-- 
+                LIMITATION: Only displaying the first 10 projects on the dashboard for better UX.
+                The API still fetches ALL projects from Zoho, but we limit the display here.
+                Users can click "See All Projects" to view the complete list (feature not yet implemented).
+              -->
               <div th:if="${zohoConnected and !#lists.isEmpty(projects)}" class="space-y-3">
-                <div th:each="project : ${projects}"
+                <div th:each="project, iterStat : ${projects}"
+                  th:if="${iterStat.index < 10}"
                   class="border border-gray-200 rounded-lg p-4 hover:border-gray-300 hover:shadow-sm transition-all">
                   <div class="flex items-center justify-between">
                     <div class="flex-1">
@@ -242,6 +248,17 @@
                       </button>
                     </form>
                   </div>
+                </div>
+
+                <!-- See All button - shown when there are more than 10 projects -->
+                <div th:if="${#lists.size(projects) > 10}" class="pt-4 text-center border-t border-gray-100">
+                  <button
+                    class="btn btn-outline border-gray-300 hover:bg-gray-50 text-gray-700 rounded-lg font-medium px-6">
+                    See All Projects
+                    <span class="text-xs text-gray-500 ml-1" th:text="'(' + ${#lists.size(projects)} + ' total)'">
+                      (0 total)
+                    </span>
+                  </button>
                 </div>
               </div>
 
