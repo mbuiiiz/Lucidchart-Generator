@@ -3,6 +3,11 @@ package com.group16.aetherxmlbridge.service;
 import com.group16.aetherxmlbridge.model.AppUser;
 import com.group16.aetherxmlbridge.repository.AppUserRepository;
 import lombok.RequiredArgsConstructor;
+
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -97,6 +102,47 @@ public class AppUserService implements UserDetailsService {
         }
 
         user.setPasswordHash(passwordEncoder.encode(newPassword.trim()));
+        appUserRepository.save(user);
+    }
+    
+    @Transactional
+    public String createPasswordResetToken(String email) {
+        AppUser user = appUserRepository.findByEmail(email).orElse(null);
+        if (user == null) {
+            return null;
+        }
+
+        String token = UUID.randomUUID().toString();
+
+        user.setResetToken(token);
+        user.setResetTokenExpiry(Instant.now().plusSeconds(30 * 60)); // 30 minutes
+
+        appUserRepository.save(user);
+
+        return token;
+    }
+
+    @Transactional
+    public void resetPasswordByToken(String token, String newPassword) {
+        AppUser user = appUserRepository.findByResetToken(token)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid token"));
+    
+        if (user.getResetTokenExpiry() == null || user.getResetTokenExpiry().isBefore(Instant.now())) {
+            throw new IllegalArgumentException("Token expired");
+        }
+    
+        if (newPassword == null || newPassword.trim().length() < 8) {
+            throw new IllegalArgumentException("Password must be at least 8 characters");
+        }
+    
+        if (passwordEncoder.matches(newPassword, user.getPasswordHash())) {
+            throw new IllegalArgumentException("New password must be different from the old password");
+        }
+    
+        user.setPasswordHash(passwordEncoder.encode(newPassword.trim()));
+        user.setResetToken(null);
+        user.setResetTokenExpiry(null);
+    
         appUserRepository.save(user);
     }
 }

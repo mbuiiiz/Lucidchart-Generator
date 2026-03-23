@@ -43,6 +43,10 @@
           <span th:text="${success}">Success</span>
         </div>
 
+        <div th:if="${param.resetSuccess}" class="alert alert-success mb-4 text-sm">
+          <span>Password was reset successfully. Please sign in.</span>
+        </div>
+
         <label class="label">Email</label>
         <input type="email" class="input" name="email" placeholder="johnpork123@gmail.com" />
 
@@ -76,6 +80,11 @@
         </div>
 
         <button class="btn btn-neutral mt-4 w-full">Login</button>
+        <div class="mt-3 text-center">
+          <a th:href="@{/forgot-password}" class="text-sm text-gray-500 hover:underline mt-2 text-center block">
+            Forgot password?
+          </a>
+        </div>
 
         <section class="flex items-center gap-3 mt-4">
           <hr class="flex-1 border-base-400" />

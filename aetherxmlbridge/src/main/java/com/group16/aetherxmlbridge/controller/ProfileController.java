@@ -5,11 +5,13 @@ import java.security.Principal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.ui.Model;
 
 import com.group16.aetherxmlbridge.service.AppUserService;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
+
 
 @Controller
 public class ProfileController {
@@ -71,6 +73,42 @@ public class ProfileController {
     
         } catch (IllegalArgumentException e) {
             return "redirect:/profile?passwordError=" + e.getMessage().replace(" ", "+");
+        }
+    }
+
+    @PostMapping("/forgot-password")
+    public String handleForgotPassword(@RequestParam("email") String email, Model model) {
+        String token = appUserService.createPasswordResetToken(email);
+    
+        if (token == null) {
+            model.addAttribute("message", "If this email exists, reset instructions were sent");
+            return "forgot-password";
+        }
+    
+        return "redirect:/reset-password?token=" + token;
+    }
+
+    @PostMapping("/reset-password")
+    public String handleResetPassword(
+            @RequestParam("token") String token,
+            @RequestParam("newPassword") String newPassword,
+            @RequestParam("repeatPassword") String repeatPassword,
+            Model model) {
+    
+        try {
+            if (!newPassword.equals(repeatPassword)) {
+                model.addAttribute("token", token);
+                model.addAttribute("error", "Passwords do not match");
+                return "reset-password";
+            }
+    
+            appUserService.resetPasswordByToken(token, newPassword);
+            return "redirect:/login?resetSuccess=1";
+    
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("token", token);
+            model.addAttribute("error", e.getMessage());
+            return "reset-password";
         }
     }
 }

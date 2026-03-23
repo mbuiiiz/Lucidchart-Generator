@@ -113,4 +113,9 @@ public class AppUser implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+    @Column(name = "reset_token")
+    private String resetToken;
+
+    @Column(name = "reset_token_expiry")
+    private Instant resetTokenExpiry;
 }
