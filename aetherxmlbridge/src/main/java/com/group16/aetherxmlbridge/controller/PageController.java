@@ -78,8 +78,8 @@ public class PageController {
     return "dashboard";
   }
 
-  @GetMapping("/profile")
-  public String getProfilePage(
+    @GetMapping("/profile")
+    public String getProfilePage(
       Model model,
       Principal principal,
       @RequestParam(value = "passwordError", required = false) String passwordError,
@@ -118,6 +118,16 @@ public class PageController {
     }
   
     return "profile";
+  }
+
+  /**
+   * Avoid displaying all Zoho projects on dashboard,
+   * Display a few, then allow user to view the rest in /projects page
+   * where there is more detail
+   */
+  @GetMapping("/projects")
+  public String getAllProjects(){
+    return "projects";
   }
 
 }

@@ -22,7 +22,7 @@
   <body class="dot-bg min-h-screen">
     <div class="flex min-h-screen">
       <!-- Sidebar -->
-      <aside class="w-64 bg-white border-r border-gray-100 flex flex-col">
+      <aside class="h-screen sticky top-0 w-64 bg-white border-r border-gray-100 flex flex-col">
         <!-- Logo Section -->
         <section class="p-6 border-b border-gray-100">
           <section class="flex items-center gap-2.5">
@@ -76,7 +76,7 @@
 
           <a th:href="@{/profile}"
              class="flex items-center gap-3 px-4 py-3 mb-2 rounded-lg hover:bg-gray-50 transition cursor-pointer">
-             <figure class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+             <figure class="shrink-0  w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
               <span class="text-sm font-semibold text-gray-600"
                     th:text="${currentUser.fullName != null and !#strings.isEmpty(currentUser.fullName) ? #strings.substring(currentUser.fullName,0,1) : 'U'}">
                 U
@@ -105,7 +105,6 @@
               Logout
             </button>
           </form>
-        
         </section>
       </aside>
 
