@@ -306,13 +306,28 @@
                 <!-- Confirm mode -->
                 <div id="deleteAccountConfirm" class="hidden">
                   <form th:action="@{/profile/delete-account}" method="post" class="space-y-3">
-                    <input
-                      type="password"
-                      name="password"
-                      placeholder="Enter your password to confirm"
-                      class="input input-bordered w-full bg-white border-red-200"
-                      required
-                    />
+                    <section class="relative w-full">
+                      <input
+                        type="password"
+                        class="input input-bordered w-full bg-white border-red-200 pr-10"
+                        name="password"
+                        placeholder="Enter your password to confirm"
+                        id="deletePasswordInput"
+                        required
+                      />
+                    
+                      <button
+                        type="button"
+                        onclick="togglePassword('deletePasswordInput', 'deleteEyeIcon', 'deleteEyeOffIcon')"
+                        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+                        aria-label="Toggle password visibility"
+                      >
+                        <th:block th:replace="~{fragments/icons :: eye('h-5 w-5', 'deleteEyeIcon')}"></th:block>
+                        <th:block
+                          th:replace="~{fragments/icons :: eyeOff('h-5 w-5 hidden', 'deleteEyeOffIcon')}"
+                        ></th:block>
+                      </button>
+                    </section>
 
                     <p th:if="${deleteError}" class="text-sm text-red-500">
                         <span th:text="${deleteError}"></span>
@@ -402,6 +417,23 @@
 
         
       </script>
+      <script>
+        function togglePassword(inputId, eyeId, eyeOffId) {
+          const input = document.getElementById(inputId)
+          const eyeIcon = document.getElementById(eyeId)
+          const eyeOffIcon = document.getElementById(eyeOffId)
+        
+          if (input.type === 'password') {
+            input.type = 'text'
+            eyeIcon.classList.add('hidden')
+            eyeOffIcon.classList.remove('hidden')
+          } else {
+            input.type = 'password'
+            eyeIcon.classList.remove('hidden')
+            eyeOffIcon.classList.add('hidden')
+          }
+        }
+        </script>
       
       <div id="passwordModal" class="fixed inset-0 bg-black/40 hidden items-center justify-center z-50">
         <div class="bg-white rounded-xl p-6 w-full max-w-md shadow-lg">
