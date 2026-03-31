@@ -258,8 +258,8 @@
                             </button>
                           </form>
                         </div>
-                      
-                      </div>
+                    </div>
+                </div>
               </section>
   
               <section class="bg-white border border-gray-100 rounded-xl p-6 shadow-sm">
@@ -358,82 +358,14 @@
         </main>
       </div>
 
+      <script th:src="@{/js/profile.js}"></script>
       <script th:inline="javascript">
-        function togglePasswordField(inputId, eyeId, eyeOffId) {
-          const input = document.getElementById(inputId);
-          const eyeIcon = document.getElementById(eyeId);
-          const eyeOffIcon = document.getElementById(eyeOffId);
-
-          if (input.type === "password") {
-            input.type = "text";
-            eyeIcon.classList.add("hidden");
-            eyeOffIcon.classList.remove("hidden");
-          } else {
-            input.type = "password";
-            eyeIcon.classList.remove("hidden");
-            eyeOffIcon.classList.add("hidden");
-          }
-        }
-
-        function toggleEdit(button, isEditing) {
-          const container = button.closest(".editable-card");
-      
-          const view = container.querySelector(".view-mode");
-          const edit = container.querySelector(".edit-mode");
-      
-          view.classList.toggle("hidden", isEditing);
-          edit.classList.toggle("hidden", !isEditing);
-        }
-      
-        function toggleDeleteAccount(isEditing) {
-          document.getElementById("deleteAccountView").classList.toggle("hidden", isEditing);
-          document.getElementById("deleteAccountConfirm").classList.toggle("hidden", !isEditing);
-        }
-      
-        function openPasswordModal() {
-          const modal = document.getElementById("passwordModal");
-          modal.classList.remove("hidden");
-          modal.classList.add("flex");
-        }
-      
-        function closePasswordModal() {
-          const modal = document.getElementById("passwordModal");
-          modal.classList.add("hidden");
-          modal.classList.remove("flex");
-        }
-      
         document.addEventListener("DOMContentLoaded", function () {
           const hasPasswordError = /*[[${passwordError != null}]]*/ false;
           const hasDeleteError = /*[[${deleteError != null}]]*/ false;
-      
-          if (hasPasswordError) {
-            openPasswordModal();
-          }
-      
-          if (hasDeleteError) {
-            toggleDeleteAccount(true);
-          }
+          initProfile(hasPasswordError, hasDeleteError);
         });
-
-        
       </script>
-      <script>
-        function togglePassword(inputId, eyeId, eyeOffId) {
-          const input = document.getElementById(inputId)
-          const eyeIcon = document.getElementById(eyeId)
-          const eyeOffIcon = document.getElementById(eyeOffId)
-        
-          if (input.type === 'password') {
-            input.type = 'text'
-            eyeIcon.classList.add('hidden')
-            eyeOffIcon.classList.remove('hidden')
-          } else {
-            input.type = 'password'
-            eyeIcon.classList.remove('hidden')
-            eyeOffIcon.classList.add('hidden')
-          }
-        }
-        </script>
       
       <div id="passwordModal" class="fixed inset-0 bg-black/40 hidden items-center justify-center z-50">
         <div class="bg-white rounded-xl p-6 w-full max-w-md shadow-lg">

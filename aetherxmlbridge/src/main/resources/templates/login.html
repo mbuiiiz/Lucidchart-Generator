@@ -23,8 +23,7 @@
         <h2 class="flex items-center justify-center">
           <span class="text-2xl font-semibold text-gray-900">
             <span class="font-bold">Aether</span
-            ><!-- DO NOT REMOVE THIS COMMENT LINE IT IS USEFUL
-            --><span class="font-normal text-gray-500">Gen</span>
+            ><span class="font-normal text-gray-500">Gen</span>
           </span>
         </h2>
         <div class="flex justify-center mb-5 mt-3">
@@ -60,10 +59,9 @@
             id="passwordInput"
           />
           <button
+            id="toggle-password"
             type="button"
-            onclick="togglePassword()"
             class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
-            aria-label="Toggle password visibility"
           >
             <!-- Eye icon (password hidden) -->
             <th:block th:replace="~{fragments/icons :: eye('h-5 w-5', 'eyeIcon')}"></th:block>
@@ -122,23 +120,6 @@
         </section>
       </fieldset>
     </form>
-
-    <script>
-      function togglePassword() {
-        const input = document.getElementById('passwordInput')
-        const eyeIcon = document.getElementById('eyeIcon')
-        const eyeOffIcon = document.getElementById('eyeOffIcon')
-
-        if (input.type === 'password') {
-          input.type = 'text'
-          eyeIcon.classList.add('hidden')
-          eyeOffIcon.classList.remove('hidden')
-        } else {
-          input.type = 'password'
-          eyeIcon.classList.remove('hidden')
-          eyeOffIcon.classList.add('hidden')
-        }
-      }
-    </script>
+    <script th:src="@{/js/login.js}"></script>
   </body>
 </html>
