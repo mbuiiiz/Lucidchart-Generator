@@ -10,7 +10,14 @@ This feature connects the app to Zoho Creator so logged-in Zoho users can see th
 
 **ZohoProject DTO** - a plain Java object (not a JPA entity) that maps fields from the Zoho Creator API response: ID, Deal Name, Stage, Company Website, Company Context, Product Purpose, Production Notes, and Customer Concerns.
 
-**ZohoApiService** - fetches projects from the Zoho Creator report API using the user's stored access token. Automatically refreshes the token if it expires within 60 seconds by POSTing to the Zoho token endpoint with the stored refresh token. Returns an empty list if the user has no Zoho token or if the API call fails.
+**ZohoScopeData DTO** - a model for scope/trigger data used in diagram generation. Contains automation triggers, conditions, actions, and related fields from the scope report.
+
+**ZohoApiService** - fetches projects and scope data from the Zoho Creator report API v2.1 using the user's stored access token. 
+- Uses the correct Zoho API base URL (`https://www.zohoapis.com/creator/v2.1/data/...`)
+- Automatically refreshes the token if it expires within 60 seconds
+- Includes `fetchProjects()` for All_Projects report
+- Includes `fetchScopeData()` for Automation_Product_Estimate_Scope_Tool_Report
+- Logs field names from API responses for debugging
 
 **OAuthLoginSuccessHandler** - after a successful Zoho OAuth login, saves the access token, refresh token, and expiry to the user's database row. The `OAuth2AuthorizedClientService` dependency is marked `@Nullable` so the app still starts under the `dev` profile. Fixed a bug where the fallback token expiry (`Instant.now().plusSeconds(3600)`) was computed but never assigned.
 
@@ -22,9 +29,25 @@ This feature connects the app to Zoho Creator so logged-in Zoho users can see th
 
 ---
 
+## API Configuration
+
+The Zoho Creator API v2.1 is configured in `application.properties`:
+
+```properties
+# Zoho Creator API v2.1 configuration
+zoho.creator.api-base-url=https://www.zohoapis.com
+zoho.creator.owner-name=${ZOHO_OWNER_NAME:}
+zoho.creator.app-link-name=${ZOHO_APP_LINK_NAME:}
+zoho.creator.report-link-name=${ZOHO_REPORT_LINK_NAME:All_Projects}
+zoho.creator.scope-report-link-name=${ZOHO_SCOPE_REPORT_LINK_NAME:Automation_Product_Estimate_Scope_Tool_Report}
+```
+
+---
+
 ## What still needs to be done
 
-- `/generate-diagram` endpoint - receives project data, sends it to Gemini, returns Lucidchart-compatible XML
+- Update AI prompt template for triggers/conditions/actions diagram generation
+- Update `/generate-diagram` endpoint to use scope data
 - Result page with XML preview and download button
 - Re-enable CSRF (currently disabled in `ProdSecurityConfig` but not in rush to change)
 - Change `frameOptions` from `disable()` to `sameOrigin()` before production
