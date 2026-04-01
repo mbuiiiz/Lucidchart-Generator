@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import com.group16.aetherxmlbridge.repository.AppUserRepository;
 import com.group16.aetherxmlbridge.model.AppUser;
 import com.group16.aetherxmlbridge.model.ZohoProject;
+import com.group16.aetherxmlbridge.model.ZohoScopeData;
 import com.group16.aetherxmlbridge.service.ZohoApiService;
 
 import org.springframework.web.bind.annotation.RequestParam;
@@ -171,6 +172,40 @@ public class PageController {
       }
     }
     return "projects";
+  }
+
+  /**
+   * Automation Scope page - displays scope data and allows generating
+   * automation flow diagrams with triggers, conditions, and actions.
+   */
+  @GetMapping("/automation-scope")
+  public String getAutomationScope(Model model, Principal principal) {
+    if (principal != null) {
+      String email;
+      if (principal instanceof OAuth2AuthenticationToken oauthToken) {
+        OAuth2User oauthUser = oauthToken.getPrincipal();
+        email = oauthUser.getAttribute("Email");
+        if (email == null) {
+          email = oauthUser.getAttribute("email");
+        }
+      } else {
+        email = principal.getName();
+      }
+
+      if (email != null) {
+        AppUser user = appUserRepository.findByEmail(email).orElse(null);
+        model.addAttribute("currentUser", user);
+
+        boolean zohoConnected = user != null && user.getZohoAccessToken() != null;
+        model.addAttribute("zohoConnected", zohoConnected);
+
+        if (zohoConnected) {
+          List<ZohoScopeData> scopeData = zohoApiService.fetchScopeData(user, null);
+          model.addAttribute("scopeData", scopeData);
+        }
+      }
+    }
+    return "automation-scope";
   }
 
 }
