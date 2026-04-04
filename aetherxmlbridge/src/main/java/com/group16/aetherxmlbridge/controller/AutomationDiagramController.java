@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -161,72 +162,206 @@ public class AutomationDiagramController {
      */
     private String buildAutomationDrawio(AutomationDiagramData data, ZohoScopeData scope) {
         StringBuilder cells = new StringBuilder();
-        int cellId = 2; // Start after root cells 0 and 1
-        int xPosition = 120;
-        int yPosition = 40;
-        int prevCellId = -1;
+        int cellId = 2;
 
-        // Start node (green pill)
+        // ── Layout constants ──────────────────────────────────────────────────
+        final int NW     = 180;  // action/trigger node width
+        final int NH     = 80;   // action/trigger node height
+        final int DW     = 130;  // diamond width
+        final int DH     = 90;   // diamond height
+        final int PILL_W = 100;  // start/terminator width
+        final int PILL_H = 50;   // start/terminator height
+        final int HGAP   = 30;   // horizontal gap between nodes on spine
+        final int VGAP   = 30;   // vertical gap between nodes in body
+        final int SPINE_Y = 80;  // Y of the horizontal top spine (node top edge)
+
+        // Current position on horizontal spine
+        int hx = 40;
+        int prevId = -1;
+        String pendingLabel = null;
+
+        // Vertical body (activated after first Search/Loop condition)
+        boolean inBody  = false;
+        int vx          = 0;   // left edge X of vertical column
+        int vy          = 0;   // current Y in vertical column
+        int loopActionId = -1;
+        AutomationDiagramData.Condition deferredLoopCond = null;
+
+        List<AutomationDiagramData.Condition> aiConditions = new ArrayList<>(data.getConditions());
+        int condIdx = 0;
+
+        // ── Start (horizontal spine) ──────────────────────────────────────────
         int startId = cellId++;
-        cells.append(createStartCell(startId, xPosition, yPosition));
-        prevCellId = startId;
-        xPosition += 140;
+        cells.append(createStartCell(startId, hx, SPINE_Y + (NH - PILL_H) / 2));
+        prevId = startId;
+        hx += PILL_W + HGAP;
 
-        // Triggers (white boxes with black border)
+        // ── Triggers (horizontal spine) ───────────────────────────────────────
         for (AutomationDiagramData.Trigger trigger : data.getTriggers()) {
-            int currentId = cellId++;
-            cells.append(createTriggerCell(currentId, trigger, xPosition, yPosition));
-            cells.append(createArrow(cellId++, prevCellId, currentId, null));
-            prevCellId = currentId;
-            xPosition += 200;
+            int id = cellId++;
+            cells.append(createTriggerCell(id, trigger, hx, SPINE_Y));
+            cells.append(createRightArrow(cellId++, prevId, id, pendingLabel));
+            pendingLabel = null;
+            prevId = id;
+            hx += NW + HGAP;
         }
 
-        List<AutomationDiagramData.Action> actions = data.getActions();
-        List<AutomationDiagramData.Condition> conditions = data.getConditions();
-        
-        int actionIndex = 0;
-        int conditionIndex = 0;
-        
-        // Process actions first, then conditions (simplified linear flow)
-        for (AutomationDiagramData.Action action : actions) {
-            int currentId = cellId++;
-            cells.append(createActionCell(currentId, action, xPosition, yPosition));
-            cells.append(createArrow(cellId++, prevCellId, currentId, null));
-            prevCellId = currentId;
-            xPosition += 200;
-            
-            // Add a condition after every 2-3 actions if we have conditions
-            if (conditionIndex < conditions.size() && (actionIndex + 1) % 2 == 0) {
-                AutomationDiagramData.Condition condition = conditions.get(conditionIndex++);
-                int condId = cellId++;
-                cells.append(createConditionCell(condId, condition, xPosition, yPosition));
-                cells.append(createArrow(cellId++, prevCellId, condId, null));
+        // ── Actions ───────────────────────────────────────────────────────────
+        for (AutomationDiagramData.Action action : data.getActions()) {
+            String type = nullSafe(action.getType()).toLowerCase();
 
-                prevCellId = condId;
-                xPosition += 180;
+            if (!inBody) {
+                // ── Horizontal spine phase ────────────────────────────────
+                int id = cellId++;
+                cells.append(createActionCell(id, action, hx, SPINE_Y));
+                cells.append(createRightArrow(cellId++, prevId, id, pendingLabel));
+                pendingLabel = null;
+                prevId = id;
+
+                if (type.equals("loop")) {
+                    loopActionId = id;
+                    // Pick/auto-generate the loop condition
+                    if (condIdx < aiConditions.size()) {
+                        deferredLoopCond = aiConditions.get(condIdx++);
+                    } else {
+                        deferredLoopCond = new AutomationDiagramData.Condition();
+                        deferredLoopCond.setName("More Items?");
+                        deferredLoopCond.setYesPath("Back to loop");
+                        deferredLoopCond.setNoPath("Continue");
+                    }
+                    // Place More Items? diamond on the spine
+                    hx += NW + HGAP;
+                    int condId = cellId++;
+                    cells.append(createConditionCellH(condId, deferredLoopCond,
+                            hx, SPINE_Y + (NH - DH) / 2));
+                    cells.append(createRightArrow(cellId++, prevId, condId, null));
+
+                    // No → Terminator continuing right on spine
+                    int termSpineId = cellId++;
+                    cells.append(createTerminatorCell(termSpineId,
+                            hx + DW + HGAP, SPINE_Y + (NH - PILL_H) / 2));
+                    cells.append(createRightArrow(cellId++, condId, termSpineId, "No"));
+
+                    // Yes → drops down into body below the diamond
+                    vx = hx + (DW - NW) / 2;
+                    vy = SPINE_Y + DH + VGAP;
+                    inBody = true;
+                    prevId = condId;
+                    pendingLabel = "Yes";
+                    deferredLoopCond = null; // already rendered
+
+                } else if (type.equals("search")) {
+                    // Place Found? diamond on the spine
+                    hx += NW + HGAP;
+                    AutomationDiagramData.Condition cond;
+                    if (condIdx < aiConditions.size()) {
+                        cond = aiConditions.get(condIdx++);
+                    } else {
+                        cond = new AutomationDiagramData.Condition();
+                        cond.setName("Found?");
+                        cond.setYesPath("Continue");
+                        cond.setNoPath("End");
+                    }
+                    int condId = cellId++;
+                    cells.append(createConditionCellH(condId, cond,
+                            hx, SPINE_Y + (NH - DH) / 2));
+                    cells.append(createRightArrow(cellId++, prevId, condId, null));
+
+                    // No → small End pill to the right
+                    int endId = cellId++;
+                    cells.append(createLocalEndCell(endId,
+                            hx + DW + HGAP, SPINE_Y + (DH - 40) / 2));
+                    cells.append(createRightArrow(cellId++, condId, endId, "No"));
+
+                    // Yes → drops down into body
+                    vx = hx + (DW - NW) / 2;
+                    vy = SPINE_Y + DH + VGAP;
+                    inBody = true;
+                    prevId = condId;
+                    pendingLabel = "Yes";
+
+                } else {
+                    hx += NW + HGAP;
+                }
+
+            } else {
+                // ── Vertical body phase ───────────────────────────────────
+                int id = cellId++;
+                cells.append(createActionCell(id, action, vx, vy));
+                cells.append(createDownArrow(cellId++, prevId, id, pendingLabel));
+                pendingLabel = null;
+                prevId = id;
+                vy += NH + VGAP;
+
+                if (type.equals("loop")) {
+                    loopActionId = id;
+                    if (condIdx < aiConditions.size()) {
+                        deferredLoopCond = aiConditions.get(condIdx++);
+                    } else {
+                        deferredLoopCond = new AutomationDiagramData.Condition();
+                        deferredLoopCond.setName("More Items?");
+                        deferredLoopCond.setYesPath("Back to loop");
+                        deferredLoopCond.setNoPath("Continue");
+                    }
+                } else if (type.equals("search")) {
+                    AutomationDiagramData.Condition cond;
+                    if (condIdx < aiConditions.size()) {
+                        cond = aiConditions.get(condIdx++);
+                    } else {
+                        cond = new AutomationDiagramData.Condition();
+                        cond.setName("Found?");
+                        cond.setYesPath("Continue");
+                        cond.setNoPath("End");
+                    }
+                    int condId = cellId++;
+                    cells.append(createConditionCellV(condId, cond,
+                            vx + (NW - DW) / 2, vy));
+                    cells.append(createDownArrow(cellId++, prevId, condId, null));
+                    int endId = cellId++;
+                    cells.append(createLocalEndCell(endId,
+                            vx + NW + HGAP, vy + (DH - 40) / 2));
+                    cells.append(createRightArrow(cellId++, condId, endId, "No"));
+                    pendingLabel = "Yes";
+                    prevId = condId;
+                    vy += DH + VGAP;
+                }
             }
-            actionIndex++;
-        }
-        
-        // Add remaining conditions at the end
-        while (conditionIndex < conditions.size()) {
-            AutomationDiagramData.Condition condition = conditions.get(conditionIndex++);
-            int currentId = cellId++;
-            cells.append(createConditionCell(currentId, condition, xPosition, yPosition));
-            cells.append(createArrow(cellId++, prevCellId, currentId, null));
-            prevCellId = currentId;
-            xPosition += 180;
         }
 
-        // Terminator node (red pill)
-        int terminatorId = cellId++;
-        cells.append(createTerminatorCell(terminatorId, xPosition, yPosition));
-        cells.append(createArrow(cellId++, prevCellId, terminatorId, null));
+        // ── Deferred loop condition (end of vertical body) ────────────────────
+        if (deferredLoopCond != null && loopActionId != -1 && inBody) {
+            int condId = cellId++;
+            cells.append(createConditionCellV(condId, deferredLoopCond,
+                    vx + (NW - DW) / 2, vy));
+            cells.append(createDownArrow(cellId++, prevId, condId, pendingLabel));
+            pendingLabel = null;
+            cells.append(createLoopBackArrow(cellId++, condId, loopActionId, "Yes"));
+            pendingLabel = "No";
+            prevId = condId;
+            vy += DH + VGAP;
+        }
+
+        // ── Terminator ────────────────────────────────────────────────────────
+        if (inBody) {
+            int termId = cellId++;
+            cells.append(createTerminatorCell(termId,
+                    vx + (NW - PILL_W) / 2, vy));
+            cells.append(createDownArrow(cellId++, prevId, termId, pendingLabel));
+        } else {
+            // No conditions at all — terminator at end of horizontal spine
+            int termId = cellId++;
+            cells.append(createTerminatorCell(termId,
+                    hx, SPINE_Y + (NH - PILL_H) / 2));
+            cells.append(createRightArrow(cellId++, prevId, termId, pendingLabel));
+        }
+
+        int pageW = Math.max(1400, hx + 400);
+        int pageH = inBody ? Math.max(900, vy + 200) : 400;
 
         return """
             <mxfile host="app.diagrams.net" modified="2026-03-31T00:00:00.000Z" agent="AetherGen" version="24.7.17">
               <diagram name="Automation Flow">
-                <mxGraphModel dx="1800" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
+                <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="%d" pageHeight="%d" math="0" shadow="0">
                   <root>
                     <mxCell id="0"/>
                     <mxCell id="1" parent="0"/>
@@ -235,7 +370,7 @@ public class AutomationDiagramController {
                 </mxGraphModel>
               </diagram>
             </mxfile>
-            """.formatted(cells.toString());
+            """.formatted(pageW, pageH, cells.toString());
     }
 
     // Start: green rounded pill
@@ -258,21 +393,18 @@ public class AutomationDiagramController {
 
     // Trigger: white box with black border
     private String createTriggerCell(int id, AutomationDiagramData.Trigger trigger, int x, int y) {
-        String text = nullSafe(trigger.getName());
-        if (trigger.getApplication() != null && !trigger.getApplication().isEmpty()) {
-            text += "\\n(" + trigger.getApplication() + ")";
-        }
-        if (trigger.getDescription() != null && !trigger.getDescription().isEmpty()) {
-            text += "\\n" + shortText(trigger.getDescription(), 80);
-        }
+        String app = nullSafe(trigger.getApplication());
+        String name = nullSafe(trigger.getName()) + (app.isEmpty() ? "" : " (" + app + ")");
+        String desc = nullSafe(trigger.getDescription());
+        String value = htmlCell(name, desc);
         return """
             <mxCell id="%d" value="%s" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
-              <mxGeometry x="%d" y="%d" width="160" height="80" as="geometry"/>
+              <mxGeometry x="%d" y="%d" width="200" height="90" as="geometry"/>
             </mxCell>
-            """.formatted(id, cellTextSafe(text), x, y);
+            """.formatted(id, value, x, y);
     }
 
-    // Condition: light blue diamond
+    // Condition: light blue diamond (legacy horizontal layout)
     private String createConditionCell(int id, AutomationDiagramData.Condition condition, int x, int y) {
         String text = nullSafe(condition.getName());
         return """
@@ -282,17 +414,85 @@ public class AutomationDiagramController {
             """.formatted(id, cellTextSafe(text), x, y - 15);
     }
 
-    // Action: light blue box
-    private String createActionCell(int id, AutomationDiagramData.Action action, int x, int y) {
-        String text = nullSafe(action.getName());
-        if (action.getDescription() != null && !action.getDescription().isEmpty()) {
-            text += "\\n" + shortText(action.getDescription(), 60);
-        }
+    // Condition: light blue diamond — horizontal spine (exits right/left, enters right/left)
+    private String createConditionCellH(int id, AutomationDiagramData.Condition condition, int x, int y) {
+        String text = nullSafe(condition.getName());
         return """
-            <mxCell id="%d" value="%s" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
-              <mxGeometry x="%d" y="%d" width="160" height="80" as="geometry"/>
+            <mxCell id="%d" value="%s" style="rhombus;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+              <mxGeometry x="%d" y="%d" width="130" height="90" as="geometry"/>
             </mxCell>
             """.formatted(id, cellTextSafe(text), x, y);
+    }
+
+    // Condition: light blue diamond — vertical layout (no y offset, larger)
+    private String createConditionCellV(int id, AutomationDiagramData.Condition condition, int x, int y) {
+        String text = nullSafe(condition.getName());
+        return """
+            <mxCell id="%d" value="%s" style="rhombus;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+              <mxGeometry x="%d" y="%d" width="140" height="100" as="geometry"/>
+            </mxCell>
+            """.formatted(id, cellTextSafe(text), x, y);
+    }
+
+    // Down arrow — exits bottom center, enters top center (main vertical flow)
+    private String createDownArrow(int id, int sourceId, int targetId, String label) {
+        String labelAttr = (label != null && !label.isEmpty())
+                ? "value=\"" + cellTextSafe(label) + "\" " : "";
+        return """
+            <mxCell id="%d" %sstyle="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="%d" target="%d">
+              <mxGeometry relative="1" as="geometry"/>
+            </mxCell>
+            """.formatted(id, labelAttr, sourceId, targetId);
+    }
+
+    // Right arrow — exits right center, enters left center (No branch)
+    private String createRightArrow(int id, int sourceId, int targetId, String label) {
+        String labelAttr = (label != null && !label.isEmpty())
+                ? "value=\"" + cellTextSafe(label) + "\" " : "";
+        return """
+            <mxCell id="%d" %sstyle="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="%d" target="%d">
+              <mxGeometry relative="1" as="geometry"/>
+            </mxCell>
+            """.formatted(id, labelAttr, sourceId, targetId);
+    }
+
+    // Loop-back arrow — exits left, curves up and re-enters left side of loop action
+    private String createLoopBackArrow(int id, int sourceId, int targetId, String label) {
+        String labelAttr = (label != null && !label.isEmpty())
+                ? "value=\"" + cellTextSafe(label) + "\" " : "";
+        return """
+            <mxCell id="%d" %sstyle="rounded=1;orthogonalLoop=1;jettySize=auto;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=classic;html=1;" edge="1" parent="1" source="%d" target="%d">
+              <mxGeometry relative="1" as="geometry"/>
+            </mxCell>
+            """.formatted(id, labelAttr, sourceId, targetId);
+    }
+
+    // No-branch stub — yellow box showing what happens on the No path
+    private String createNoStubCell(int id, int x, int y, String text) {
+        return """
+            <mxCell id="%d" value="%s" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+              <mxGeometry x="%d" y="%d" width="160" height="60" as="geometry"/>
+            </mxCell>
+            """.formatted(id, cellTextSafe(text), x, y);
+    }
+
+    // Local End pill — small red terminator placed beside a No branch
+    private String createLocalEndCell(int id, int x, int y) {
+        return """
+            <mxCell id="%d" value="End" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+              <mxGeometry x="%d" y="%d" width="70" height="40" as="geometry"/>
+            </mxCell>
+            """.formatted(id, x, y);
+    }
+
+    // Action: light blue box
+    private String createActionCell(int id, AutomationDiagramData.Action action, int x, int y) {
+        String value = htmlCell(nullSafe(action.getName()), nullSafe(action.getDescription()));
+        return """
+            <mxCell id="%d" value="%s" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+              <mxGeometry x="%d" y="%d" width="200" height="90" as="geometry"/>
+            </mxCell>
+            """.formatted(id, value, x, y);
     }
 
     // Arrow with optional label (Yes/No for conditions)
@@ -349,6 +549,17 @@ public class AutomationDiagramController {
 
     private String nullSafe(String text) {
         return text == null ? "" : text;
+    }
+
+    // Build an HTML cell value: bold name on top, smaller description below
+    private String htmlCell(String name, String description) {
+        String safeName = xmlSafe(nullSafe(name));
+        String safeDesc = xmlSafe(nullSafe(description));
+        if (safeDesc.isEmpty()) {
+            return "&lt;b&gt;" + safeName + "&lt;/b&gt;";
+        }
+        return "&lt;b&gt;" + safeName + "&lt;/b&gt;&lt;br/&gt;"
+                + "&lt;font style=&quot;font-size:10px;&quot;&gt;" + safeDesc + "&lt;/font&gt;";
     }
 
     private String getFileName(String title) {
