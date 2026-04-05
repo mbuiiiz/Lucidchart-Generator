@@ -162,6 +162,13 @@
                           </div>
                       
                           <p class="font-medium text-gray-900" th:text="${currentUser.fullName}"></p>
+                          <p
+                            th:if="${nameSuccess}"
+                            id="nameSuccessMessage"
+                            class="text-sm text-green-700 bg-green-50 border border-green-200 rounded-lg px-3 py-2 mt-2"
+                          >
+                            Name updated successfully
+                          </p>
                         </div>
                       
                         <!-- Edit -->
@@ -214,7 +221,7 @@
                         <!-- View -->
                         <div class="view-mode">
                           <div class="flex items-center justify-between mb-1">
-                            <p class="text-sm text-gray-500">Phone Number (Restrictions WiP)</p>
+                            <p class="text-sm text-gray-500">Phone Number</p>
                             <button
                               type="button"
                               onclick="toggleEdit(this, true)"
@@ -225,10 +232,22 @@
                             </button>
                           </div>
                       
-                          <p class="font-medium"
-                             th:classappend="${currentUser.phoneNumber == null} ? ' text-gray-400' : ' text-gray-900'"
-                             th:text="${currentUser.phoneNumber == null} ? 'Not set' : currentUser.phoneNumber">
-                          </p>
+                          <p class="font-medium text-gray-400"
+                          th:if="${currentUser.phoneNumber == null}"
+                          th:text="'Not set'">
+                       </p>
+                       
+                       <p class="font-medium text-gray-900"
+                          th:unless="${currentUser.phoneNumber == null}"
+                          th:text="${maskedPhoneNumber}">
+                       </p>
+                       <p
+                        th:if="${phoneSuccess}"
+                        id="phoneSuccessMessage"
+                        class="text-sm text-green-700 bg-green-50 border border-green-200 rounded-lg px-3 py-2 mt-2"
+                      >
+                        Phone number updated successfully
+                      </p>
                         </div>
                       
                         <!-- Edit -->
@@ -243,19 +262,57 @@
                               Cancel
                             </button>
                           </div>
-                      
+
                           <form th:action="@{/profile/update-phone}" method="post" class="space-y-3">
+                            <select id="countryCode" class="select select-bordered w-full">
+                              <option value="+1">🇨🇦 +1 (Canada/US)</option>
+                              <option value="+44">🇬🇧 +44 (UK)</option>
+                              <option value="+7">🇷🇺 +7 (Russia)</option>
+                              <option value="+49">🇩🇪 +49 (Germany)</option>
+                              <option value="+33">🇫🇷 +33 (France)</option>
+                              <option value="+34">🇪🇸 +34 (Spain)</option>
+                              <option value="+39">🇮🇹 +39 (Italy)</option>
+                              <option value="+972">🇮🇱 +972 (Israel)</option>
+                              <option value="+91">🇮🇳 +91 (India)</option>
+                              <option value="+86">🇨🇳 +86 (China)</option>
+                            </select>
+
                             <input
                               type="text"
-                              name="phoneNumber"
-                              th:value="${currentUser.phoneNumber}"
-                              placeholder="Enter phone number"
+                              id="phoneInput"
+                              placeholder="(123) 456-7890"
                               class="input input-bordered w-full"
+                              maxlength="14"
+                              autocomplete="off"
                             />
-                      
-                            <button class="btn btn-sm bg-gray-900 text-white">
-                              Save
-                            </button>
+
+                            <input type="hidden" name="phoneNumber" id="fullPhoneNumber" />
+
+                            <p id="phoneValidationMessage" class="text-sm hidden"></p>
+
+                            <p th:if="${phoneError}" class="text-sm text-red-500" data-phone-error>
+                              <span th:text="${phoneError}"></span>
+                            </p>
+
+                            <div class="flex gap-2">
+                              <button
+                                type="button"
+                                id="validatePhoneBtn"
+                                onclick="validatePhoneInput()"
+                                class="btn btn-sm bg-gray-200 hover:bg-gray-300 text-gray-800 border-none rounded-lg px-4"
+                              >
+                                Validate
+                              </button>
+
+                              <button
+                                type="submit"
+                                id="savePhoneBtn"
+                                class="btn btn-sm bg-gray-900 hover:bg-gray-700 text-white border-none rounded-lg px-4"
+                                disabled
+                              >
+                                Save
+                              </button>
+                            </div>
                           </form>
                         </div>
                     </div>
@@ -281,7 +338,11 @@
                     Change Avatar (WiP)
                   </button>
                 </div>
-                <p th:if="${passwordSuccess}" class="text-sm text-green-600 mt-3">
+                <p
+                  th:if="${passwordSuccess}"
+                  id="passwordSuccessMessage"
+                  class="text-sm text-green-700 bg-green-50 border border-green-200 rounded-lg px-3 py-2 mt-3"
+                >
                   <span th:text="${passwordSuccess}"></span>
                 </p>
               </section>
@@ -318,8 +379,7 @@
                     
                       <button
                         type="button"
-                        onclick="togglePassword('deletePasswordInput', 'deleteEyeIcon', 'deleteEyeOffIcon')"
-                        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+                        onclick="togglePasswordField('deletePasswordInput', 'deleteEyeIcon', 'deleteEyeOffIcon')"                        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
                         aria-label="Toggle password visibility"
                       >
                         <th:block th:replace="~{fragments/icons :: eye('h-5 w-5', 'deleteEyeIcon')}"></th:block>
@@ -363,7 +423,10 @@
         document.addEventListener("DOMContentLoaded", function () {
           const hasPasswordError = /*[[${passwordError != null}]]*/ false;
           const hasDeleteError = /*[[${deleteError != null}]]*/ false;
-          initProfile(hasPasswordError, hasDeleteError);
+          const hasPhoneSuccess = /*[[${phoneSuccess != null}]]*/ false;
+          const hasNameSuccess = /*[[${nameSuccess != null}]]*/ false;
+
+          initProfile(hasPasswordError, hasDeleteError, hasPhoneSuccess, hasNameSuccess);
         });
       </script>
       
@@ -451,5 +514,22 @@
           </form>
         </div>
       </div>
+      <script th:inline="javascript">
+        document.addEventListener("DOMContentLoaded", function () {
+          const hasPasswordError = /*[[${passwordError != null}]]*/ false;
+          const hasDeleteError = /*[[${deleteError != null}]]*/ false;
+          const hasPhoneSuccess = /*[[${phoneSuccess != null}]]*/ false;
+          const hasNameSuccess = /*[[${nameSuccess != null}]]*/ false;
+          const hasPasswordSuccess = /*[[${passwordSuccess != null}]]*/ false;
+      
+          initProfile(
+            hasPasswordError,
+            hasDeleteError,
+            hasPhoneSuccess,
+            hasNameSuccess,
+            hasPasswordSuccess
+          );
+        });
+      </script>
     </body>
   </html>
