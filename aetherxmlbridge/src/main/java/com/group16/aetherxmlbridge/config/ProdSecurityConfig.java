@@ -14,70 +14,70 @@ import org.springframework.security.web.SecurityFilterChain;
 @Profile("!dev")
 public class ProdSecurityConfig {
 
-  // security chain of form + OAuth login
-  @Bean
-  public SecurityFilterChain securityFilterChain(
-      HttpSecurity http,
-      ObjectProvider<ClientRegistrationRepository> clientRegistrationRepository,
-      OAuthLoginSuccessHandler oAuthLoginSuccessHandler
-  ) throws Exception {
+    // security chain of form + OAuth login
+@Bean
+public SecurityFilterChain securityFilterChain(
+        HttpSecurity http,
+        ObjectProvider<ClientRegistrationRepository> clientRegistrationRepository,
+        OAuthLoginSuccessHandler oAuthLoginSuccessHandler
+) throws Exception {
     boolean oauthEnabled = clientRegistrationRepository.getIfAvailable() != null;
 
     http
-        .csrf(csrf -> csrf.disable()) // enable this for future production
-        .authorizeHttpRequests(auth -> {
-            auth.requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
-                // .requestMatchers("/h2-console/**").permitAll() // dev only — do not expose in production
-                .requestMatchers("/", "/login", "/register", "/error", "/error/**").permitAll()
-                .requestMatchers("/admin/**").hasRole("ADMIN");
-            
-            // Add OAuth matchers if OAuth is enabled
-            if (oauthEnabled) {
-                auth.requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll();
-            }
-            
-            auth.anyRequest().authenticated();
-        })
+            .csrf(csrf -> csrf.disable()) // enable this for future production
+            .authorizeHttpRequests(auth -> {
+                auth.requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
+                        // .requestMatchers("/h2-console/**").permitAll() // dev only — do not expose in production
+                        .requestMatchers("/", "/login", "/register", "/error", "/error/**", "/forgot-password", "/reset-password").permitAll()
+                        .requestMatchers("/api/ai/chat").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN");
 
-        // disabling iframe bc h2 uses iframe for development change to 
-        // .frameOptions(frame -> frame.sameOrigin()) 
-        .headers(headers -> headers
-            .frameOptions(frame -> frame.disable())
-        )
+                if (oauthEnabled) {
+                    auth.requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll();
+                }
 
-        // form config
-        .formLogin(form -> form
-            .loginPage("/login")
-            .loginProcessingUrl("/login")
-            .usernameParameter("email")
-            .passwordParameter("password")
-            .defaultSuccessUrl("/dashboard", true)
-            .failureUrl("/login?error")
-            .permitAll()
-        )
+                auth.anyRequest().authenticated();
+            })
 
-        // logout endpoint + redirection
-        .logout(logout -> logout
-            .logoutUrl("/logout")
-            .logoutSuccessUrl("/login?logout")
+            // disabling iframe bc h2 uses iframe for development change to
+            // .frameOptions(frame -> frame.sameOrigin())
+            .headers(headers -> headers
+                    .frameOptions(frame -> frame.disable())
+            )
+
+            // form config
+            .formLogin(form -> form
+                    .loginPage("/login")
+                    .loginProcessingUrl("/login")
+                    .usernameParameter("email")
+                    .passwordParameter("password")
+                    .defaultSuccessUrl("/dashboard", true)
+                    .failureUrl("/login?error")
+                    .permitAll()
+            )
+
+            // logout endpoint + redirection
+            .logout(logout -> logout
+                    .logoutUrl("/logout")
+                    .logoutSuccessUrl("/login?logout")
+            );
+
+    if (oauthEnabled) {
+        ClientRegistrationRepository repo = clientRegistrationRepository.getIfAvailable();
+
+        DefaultOAuth2AuthorizationRequestResolver resolver =
+                new DefaultOAuth2AuthorizationRequestResolver(repo, "/oauth2/authorization");
+        resolver.setAuthorizationRequestCustomizer(
+                customizer -> customizer.additionalParameters(params -> params.put("access_type", "offline"))
         );
 
-
-    // Configure OAuth2 login if available
-    if (oauthEnabled) {
-      ClientRegistrationRepository repo = clientRegistrationRepository.getIfAvailable();
-
-      // custom resolver that adds access_type=offline so Zoho returns a refresh token
-      DefaultOAuth2AuthorizationRequestResolver resolver = new DefaultOAuth2AuthorizationRequestResolver(repo, "/oauth2/authorization");
-      resolver.setAuthorizationRequestCustomizer(customizer -> customizer.additionalParameters(params -> params.put("access_type", "offline")));
-
-      http.oauth2Login(oauth -> oauth
-              .loginPage("/login")
-              .authorizationEndpoint(ep -> ep.authorizationRequestResolver(resolver))
-              .successHandler(oAuthLoginSuccessHandler)
-          );
+        http.oauth2Login(oauth -> oauth
+                .loginPage("/login")
+                .authorizationEndpoint(ep -> ep.authorizationRequestResolver(resolver))
+                .successHandler(oAuthLoginSuccessHandler)
+        );
     }
 
     return http.build();
-  }
+    }
 }

@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import com.group16.aetherxmlbridge.repository.AppUserRepository;
 import com.group16.aetherxmlbridge.model.AppUser;
 import com.group16.aetherxmlbridge.model.ZohoProject;
+import com.group16.aetherxmlbridge.model.ZohoScopeData;
 import com.group16.aetherxmlbridge.service.ZohoApiService;
 
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.group16.aetherxmlbridge.service.PhoneMaskingService;
 
 /**
  * This file is for returning thymeleaf templates to the user when accessing a certain
@@ -25,11 +27,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class PageController {
   private final AppUserRepository appUserRepository;
   private final ZohoApiService zohoApiService;
+  private final PhoneMaskingService phoneMaskingService;
 
-  public PageController(AppUserRepository appUserRepository, ZohoApiService zohoApiService) {
-    this.appUserRepository = appUserRepository;
-    this.zohoApiService = zohoApiService;
-  }
+public PageController(
+    AppUserRepository appUserRepository,
+    ZohoApiService zohoApiService,
+    PhoneMaskingService phoneMaskingService
+) {
+  this.appUserRepository = appUserRepository;
+  this.zohoApiService = zohoApiService;
+  this.phoneMaskingService = phoneMaskingService;
+}
   
   @GetMapping("/")
   public String getLanding(){
@@ -75,18 +83,34 @@ public class PageController {
       }
     }
 
+    model.addAttribute("activePage", "dashboard");
     return "dashboard";
   }
 
-    @GetMapping("/profile")
-    public String getProfilePage(
-      Model model,
-      Principal principal,
-      @RequestParam(value = "passwordError", required = false) String passwordError,
-      @RequestParam(value = "passwordSuccess", required = false) String passwordSuccess,
-      @RequestParam(value = "deleteError", required = false) String deleteError
-  ) {
-  
+      @GetMapping("/profile")
+      public String getProfilePage(
+          Model model,
+          Principal principal,
+          @RequestParam(value = "passwordError", required = false) String passwordError,
+          @RequestParam(value = "passwordSuccess", required = false) String passwordSuccess,
+          @RequestParam(value = "deleteError", required = false) String deleteError,
+          @RequestParam(value = "phoneError", required = false) String phoneError,
+          @RequestParam(value = "phoneSuccess", required = false) String phoneSuccess,
+          @RequestParam(value = "nameSuccess", required = false) String nameSuccess
+      ) {
+
+      if (nameSuccess != null) {
+        model.addAttribute("nameSuccess", true);
+      }  
+
+      if (phoneError != null) {
+        model.addAttribute("phoneError", phoneError);
+    }
+    
+    if (phoneSuccess != null) {
+        model.addAttribute("phoneSuccess", "Phone number updated successfully");
+    }
+
     if (principal != null) {
       String email;
       if (principal instanceof OAuth2AuthenticationToken oauthToken) {
@@ -102,7 +126,16 @@ public class PageController {
       if (email != null) {
         AppUser user = appUserRepository.findByEmail(email).orElse(null);
         model.addAttribute("currentUser", user);
+      
+        if (user != null && user.getPhoneNumber() != null) {
+          model.addAttribute("maskedPhoneNumber",
+              phoneMaskingService.mask(user.getPhoneNumber()));
+      
+          model.addAttribute("formattedPhoneNumber",
+              phoneMaskingService.format(user.getPhoneNumber()));
       }
+      }
+      
     }
   
     if (passwordError != null) {
@@ -117,9 +150,29 @@ public class PageController {
       model.addAttribute("deleteError", "Incorrect password");
     }
   
+    model.addAttribute("activePage", "profile");
     return "profile";
   }
 
+  @GetMapping("/forgot-password")
+  public String getForgotPasswordPage() {
+      return "forgot-password";
+  }
+
+  @GetMapping("/reset-password")
+  public String getResetPasswordPage(
+      @RequestParam(value = "token", required = false) String token,
+      @RequestParam(value = "error", required = false) String error,
+      Model model
+  ) {
+      model.addAttribute("token", token);
+  
+      if (error != null) {
+          model.addAttribute("error", error);
+      }
+  
+      return "reset-password";
+  }
   /**
    * Avoid displaying all Zoho projects on dashboard,
    * Display a few, then allow user to view the rest in /projects page
@@ -152,7 +205,43 @@ public class PageController {
         model.addAttribute("projects", projects);
       }
     }
+    model.addAttribute("activePage", "projects");
     return "projects";
+  }
+
+  /**
+   * Automation Scope page - displays scope data and allows generating
+   * automation flow diagrams with triggers, conditions, and actions.
+   */
+  @GetMapping("/automation-scope")
+  public String getAutomationScope(Model model, Principal principal) {
+    if (principal != null) {
+      String email;
+      if (principal instanceof OAuth2AuthenticationToken oauthToken) {
+        OAuth2User oauthUser = oauthToken.getPrincipal();
+        email = oauthUser.getAttribute("Email");
+        if (email == null) {
+          email = oauthUser.getAttribute("email");
+        }
+      } else {
+        email = principal.getName();
+      }
+
+      if (email != null) {
+        AppUser user = appUserRepository.findByEmail(email).orElse(null);
+        model.addAttribute("currentUser", user);
+
+        boolean zohoConnected = user != null && user.getZohoAccessToken() != null;
+        model.addAttribute("zohoConnected", zohoConnected);
+
+        if (zohoConnected) {
+          List<ZohoScopeData> scopeData = zohoApiService.fetchScopeData(user, null);
+          model.addAttribute("scopeData", scopeData);
+        }
+      }
+    }
+    model.addAttribute("activePage", "automation-scope");
+    return "automation-scope";
   }
 
 }

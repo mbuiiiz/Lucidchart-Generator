@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -14,6 +14,10 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" th:href="@{/css/login_page.css}" />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" th:href="@{/favicon.svg}" />
+    
     <title>Sign Up</title>
   </head>
 
@@ -24,8 +28,7 @@
         <h2 class="flex items-center justify-center">
           <span class="text-2xl font-semibold text-gray-900">
             <span class="font-bold">Aether</span
-            ><!-- DO NOT REMOVE THIS COMMENT LINE IT IS USEFUL
-            --><span class="font-normal text-gray-500">Gen</span>
+            ><span class="font-normal text-gray-500">Gen</span>
           </span>
         </h2>
         <div class="flex justify-center mb-5 mt-3">
@@ -67,10 +70,9 @@
             id="passwordInput"
           />
           <button
+            id="toggle-pw"
             type="button"
-            onclick="togglePassword('passwordInput', 'eyeIcon', 'eyeOffIcon')"
             class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
-            aria-label="Toggle password visibility"
           >
             <th:block th:replace="~{fragments/icons :: eye('h-5 w-5', 'eyeIcon')}"></th:block>
             <th:block
@@ -89,10 +91,9 @@
             id="confirmPasswordInput"
           />
           <button
+            id="toggle-pw-confirm"
             type="button"
-            onclick="togglePassword('confirmPasswordInput', 'eyeIcon2', 'eyeOffIcon2')"
             class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
-            aria-label="Toggle confirm password visibility"
           >
             <th:block th:replace="~{fragments/icons :: eye('h-5 w-5', 'eyeIcon2')}"></th:block>
             <th:block
@@ -140,23 +141,7 @@
 
       </fieldset>
     </form>
-
-    <script>
-      function togglePassword(inputId, eyeId, eyeOffId) {
-        const input = document.getElementById(inputId)
-        const eyeIcon = document.getElementById(eyeId)
-        const eyeOffIcon = document.getElementById(eyeOffId)
-
-        if (input.type === 'password') {
-          input.type = 'text'
-          eyeIcon.classList.add('hidden')
-          eyeOffIcon.classList.remove('hidden')
-        } else {
-          input.type = 'password'
-          eyeIcon.classList.remove('hidden')
-          eyeOffIcon.classList.add('hidden')
-        }
-      }
-    </script>
+    
+    <script th:src="@{/js/register.js}"></script>
   </body>
 </html>

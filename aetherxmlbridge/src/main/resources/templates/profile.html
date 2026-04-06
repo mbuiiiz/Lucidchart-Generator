@@ -1,131 +1,20 @@
 <!doctype html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  th:replace="~{fragments/base-layout :: layout(~{::title}, ~{::content})}"
+>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&amp;display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" th:href="@{/css/dashboard.css}"/>
-
     <title>My Profile - AetherGen</title>
   </head>
 
-  <body class="dot-bg min-h-screen">
-    <div class="flex min-h-screen">
-      <!-- Sidebar -->
-      <aside class="w-64 bg-white border-r border-gray-100 flex flex-col">
-        <!-- Logo -->
-        <section class="p-6 border-b border-gray-100">
-          <section class="flex items-center gap-2.5">
-            <figure
-              class="w-8 h-8 bg-gray-900 rounded-md flex items-center justify-center text-white font-bold text-sm select-none"
-            >
-              <th:block th:replace="~{fragments/icons :: brandGlobe('size-6')}"></th:block>
-            </figure>
-              <span class="text-xl font-semibold text-gray-900">
-                <span class="font-bold">Aether</span><span class="font-normal text-gray-500">Gen</span>
-              </span>
-            </section>
-          </section>
-  
-          <!-- Navigation -->
-          <nav class="flex-1 p-4">
-            <ul class="space-y-2">
-              <li>
-                <a
-                  th:href="@{/dashboard}"
-                  class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-500 hover:bg-gray-50 hover:text-gray-900 transition-colors"
-                >
-                  <th:block th:replace="~{fragments/icons :: home('size-5')}"></th:block>
-                  Dashboard
-                </a>
-              </li>
-  
-              <li>
-                <a
-                  href="#"
-                  class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-500 hover:bg-gray-50 hover:text-gray-900 transition-colors"
-                >
-                  <th:block th:replace="~{fragments/icons :: folder('size-5')}"></th:block>
-                  Projects
-                </a>
-              </li>
-  
-              <li>
-                <a
-                  href="#"
-                  class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-500 hover:bg-gray-50 hover:text-gray-900 transition-colors"
-                >
-                  <th:block th:replace="~{fragments/icons :: document('size-5')}"></th:block>
-                  Generated Diagrams
-                </a>
-              </li>
-            </ul>
-          </nav>
-  
-          <!-- User Section & Logout -->
-          <section class="p-4 border-t border-gray-100">
+  <body>
+    <th:block th:fragment="content">
+      <!-- Page Header -->
+      <th:block
+        th:replace="~{fragments/page-header :: header('My Profile', 'View your account details and manage your profile settings.', false)}"
+      ></th:block>
 
-            <!-- Clickable User Block -->
-            <a th:href="@{/profile}"
-               class="flex items-center gap-3 px-4 py-3 mb-2 rounded-lg hover:bg-gray-50 transition cursor-pointer">
-          
-               <figure class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                <span class="text-sm font-semibold text-gray-600"
-                      th:text="${currentUser.fullName != null and !#strings.isEmpty(currentUser.fullName) ? #strings.substring(currentUser.fullName,0,1) : 'U'}">
-                  U
-                </span>
-              </figure>
-          
-              <div class="flex-1">
-                <p class="text-sm font-semibold text-gray-900"
-                   th:text="${currentUser.fullName}">
-                  User Name
-                </p>
-          
-                <p class="text-xs text-gray-500"
-                   th:text="${currentUser.email}">
-                  user@email.com
-                </p>
-              </div>
-          
-            </a>
-          
-            <!-- Logout -->
-            <form th:action="@{/logout}" method="post">
-              <button
-                class="w-full btn btn-sm bg-gray-900 hover:bg-gray-700 text-white border-none rounded-lg font-medium shadow-sm flex items-center justify-center gap-2"
-                type="submit"
-              >
-                <th:block th:replace="~{fragments/icons :: logout('size-4')}"></th:block>
-                Logout
-              </button>
-            </form>
-          
-          </section>
-        </aside>
-  
-        <!-- Main Content -->
-        <main class="flex-1 overflow-auto">
-          <header class="bg-white/80 backdrop-blur-md sticky top-0 z-40 border-b border-gray-100">
-            <div class="px-8 py-3">
-              <h1 class="text-2xl font-bold text-gray-900">My Profile</h1>
-              <p class="text-sm text-gray-500 mt-1">
-                View your account details and manage your profile settings.
-              </p>
-            </div>
-          </header>
-  
-          <div class="p-8">
+      <div class="p-8">
             <div class="max-w-4xl mx-auto space-y-6">
   
               <section class="bg-white border border-gray-100 rounded-xl p-6 shadow-sm">
@@ -162,6 +51,13 @@
                           </div>
                       
                           <p class="font-medium text-gray-900" th:text="${currentUser.fullName}"></p>
+                          <p
+                            th:if="${nameSuccess}"
+                            id="nameSuccessMessage"
+                            class="text-sm text-green-700 bg-green-50 border border-green-200 rounded-lg px-3 py-2 mt-2"
+                          >
+                            Name updated successfully
+                          </p>
                         </div>
                       
                         <!-- Edit -->
@@ -171,7 +67,7 @@
                             <button
                               type="button"
                               onclick="toggleEdit(this, false)"
-                              class="text-sm font-medium text-gray-500"
+                              class="text-sm font-medium text-gray-500 hover:text-gray-900"
                             >
                               Cancel
                             </button>
@@ -214,7 +110,7 @@
                         <!-- View -->
                         <div class="view-mode">
                           <div class="flex items-center justify-between mb-1">
-                            <p class="text-sm text-gray-500">Phone Number (Restrictions WiP)</p>
+                            <p class="text-sm text-gray-500">Phone Number</p>
                             <button
                               type="button"
                               onclick="toggleEdit(this, true)"
@@ -225,10 +121,39 @@
                             </button>
                           </div>
                       
-                          <p class="font-medium"
-                             th:classappend="${currentUser.phoneNumber == null} ? ' text-gray-400' : ' text-gray-900'"
-                             th:text="${currentUser.phoneNumber == null} ? 'Not set' : currentUser.phoneNumber">
-                          </p>
+                          <p class="font-medium text-gray-400"
+                          th:if="${currentUser.phoneNumber == null}"
+                          th:text="'Not set'">
+                       </p>
+                       
+                       <div th:unless="${currentUser.phoneNumber == null}" class="flex items-center gap-2">
+
+                        <!-- Phone text -->
+                        <p id="phoneViewText"
+                           class="font-medium text-gray-900"
+                           th:data-masked="${maskedPhoneNumber}"
+                           th:data-full="${formattedPhoneNumber}"
+                           th:text="${maskedPhoneNumber}">
+                        </p>
+                      
+                        <!-- Eye button -->
+                        <button
+                          type="button"
+                          onclick="togglePhoneView()"
+                          class="text-gray-400 hover:text-gray-700"
+                        >
+                          <th:block th:replace="~{fragments/icons :: eye('h-4 w-4', 'viewPhoneEye')}"></th:block>
+                          <th:block th:replace="~{fragments/icons :: eyeOff('h-4 w-4 hidden', 'viewPhoneEyeOff')}"></th:block>
+                        </button>
+                      
+                      </div>
+                       <p
+                        th:if="${phoneSuccess}"
+                        id="phoneSuccessMessage"
+                        class="text-sm text-green-700 bg-green-50 border border-green-200 rounded-lg px-3 py-2 mt-2"
+                      >
+                        Phone number updated successfully
+                      </p>
                         </div>
                       
                         <!-- Edit -->
@@ -238,28 +163,66 @@
                             <button
                               type="button"
                               onclick="toggleEdit(this, false)"
-                              class="text-sm font-medium text-gray-500"
+                              class="text-sm font-medium text-gray-500 hover:text-gray-900"
                             >
                               Cancel
                             </button>
                           </div>
-                      
+
                           <form th:action="@{/profile/update-phone}" method="post" class="space-y-3">
+                            <select id="countryCode" class="select select-bordered w-full">
+                              <option value="+1">🇨🇦 +1 (Canada/US)</option>
+                              <option value="+44">🇬🇧 +44 (UK)</option>
+                              <option value="+7">🇷🇺 +7 (Russia)</option>
+                              <option value="+49">🇩🇪 +49 (Germany)</option>
+                              <option value="+33">🇫🇷 +33 (France)</option>
+                              <option value="+34">🇪🇸 +34 (Spain)</option>
+                              <option value="+39">🇮🇹 +39 (Italy)</option>
+                              <option value="+972">🇮🇱 +972 (Israel)</option>
+                              <option value="+91">🇮🇳 +91 (India)</option>
+                              <option value="+86">🇨🇳 +86 (China)</option>
+                            </select>
+
                             <input
                               type="text"
-                              name="phoneNumber"
-                              th:value="${currentUser.phoneNumber}"
-                              placeholder="Enter phone number"
+                              id="phoneInput"
+                              placeholder="(123) 456-7890"
                               class="input input-bordered w-full"
+                              maxlength="14"
+                              autocomplete="off"
                             />
-                      
-                            <button class="btn btn-sm bg-gray-900 text-white">
-                              Save
-                            </button>
+
+                            <input type="hidden" name="phoneNumber" id="fullPhoneNumber" />
+
+                            <p id="phoneValidationMessage" class="text-sm hidden"></p>
+
+                            <p th:if="${phoneError}" class="text-sm text-red-500" data-phone-error>
+                              <span th:text="${phoneError}"></span>
+                            </p>
+
+                            <div class="flex gap-2">
+                              <button
+                                type="button"
+                                id="validatePhoneBtn"
+                                onclick="validatePhoneInput()"
+                                class="btn btn-sm bg-gray-200 hover:bg-gray-300 text-gray-800 border-none rounded-lg px-4"
+                              >
+                                Validate
+                              </button>
+
+                              <button
+                                type="submit"
+                                id="savePhoneBtn"
+                                class="btn btn-sm bg-gray-900 hover:bg-gray-700 text-white border-none rounded-lg px-4"
+                                disabled
+                              >
+                                Save
+                              </button>
+                            </div>
                           </form>
                         </div>
-                      
-                      </div>
+                    </div>
+                </div>
               </section>
   
               <section class="bg-white border border-gray-100 rounded-xl p-6 shadow-sm">
@@ -281,7 +244,11 @@
                     Change Avatar (WiP)
                   </button>
                 </div>
-                <p th:if="${passwordSuccess}" class="text-sm text-green-600 mt-3">
+                <p
+                  th:if="${passwordSuccess}"
+                  id="passwordSuccessMessage"
+                  class="text-sm text-green-700 bg-green-50 border border-green-200 rounded-lg px-3 py-2 mt-3"
+                >
                   <span th:text="${passwordSuccess}"></span>
                 </p>
               </section>
@@ -306,13 +273,27 @@
                 <!-- Confirm mode -->
                 <div id="deleteAccountConfirm" class="hidden">
                   <form th:action="@{/profile/delete-account}" method="post" class="space-y-3">
-                    <input
-                      type="password"
-                      name="password"
-                      placeholder="Enter your password to confirm"
-                      class="input input-bordered w-full bg-white border-red-200"
-                      required
-                    />
+                    <section class="relative w-full">
+                      <input
+                        type="password"
+                        class="input input-bordered w-full bg-white border-red-200 pr-10"
+                        name="password"
+                        placeholder="Enter your password to confirm"
+                        id="deletePasswordInput"
+                        required
+                      />
+                    
+                      <button
+                        type="button"
+                        onclick="togglePasswordField('deletePasswordInput', 'deleteEyeIcon', 'deleteEyeOffIcon')"                        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+                        aria-label="Toggle password visibility"
+                      >
+                        <th:block th:replace="~{fragments/icons :: eye('h-5 w-5', 'deleteEyeIcon')}"></th:block>
+                        <th:block
+                          th:replace="~{fragments/icons :: eyeOff('h-5 w-5 hidden', 'deleteEyeOffIcon')}"
+                        ></th:block>
+                      </button>
+                    </section>
 
                     <p th:if="${deleteError}" class="text-sm text-red-500">
                         <span th:text="${deleteError}"></span>
@@ -340,68 +321,8 @@
   
             </div>
           </div>
-        </main>
-      </div>
 
-      <script th:inline="javascript">
-        function togglePasswordField(inputId, eyeId, eyeOffId) {
-          const input = document.getElementById(inputId);
-          const eyeIcon = document.getElementById(eyeId);
-          const eyeOffIcon = document.getElementById(eyeOffId);
-
-          if (input.type === "password") {
-            input.type = "text";
-            eyeIcon.classList.add("hidden");
-            eyeOffIcon.classList.remove("hidden");
-          } else {
-            input.type = "password";
-            eyeIcon.classList.remove("hidden");
-            eyeOffIcon.classList.add("hidden");
-          }
-        }
-
-        function toggleEdit(button, isEditing) {
-          const container = button.closest(".editable-card");
-      
-          const view = container.querySelector(".view-mode");
-          const edit = container.querySelector(".edit-mode");
-      
-          view.classList.toggle("hidden", isEditing);
-          edit.classList.toggle("hidden", !isEditing);
-        }
-      
-        function toggleDeleteAccount(isEditing) {
-          document.getElementById("deleteAccountView").classList.toggle("hidden", isEditing);
-          document.getElementById("deleteAccountConfirm").classList.toggle("hidden", !isEditing);
-        }
-      
-        function openPasswordModal() {
-          const modal = document.getElementById("passwordModal");
-          modal.classList.remove("hidden");
-          modal.classList.add("flex");
-        }
-      
-        function closePasswordModal() {
-          const modal = document.getElementById("passwordModal");
-          modal.classList.add("hidden");
-          modal.classList.remove("flex");
-        }
-      
-        document.addEventListener("DOMContentLoaded", function () {
-          const hasPasswordError = /*[[${passwordError != null}]]*/ false;
-          const hasDeleteError = /*[[${deleteError != null}]]*/ false;
-      
-          if (hasPasswordError) {
-            openPasswordModal();
-          }
-      
-          if (hasDeleteError) {
-            toggleDeleteAccount(true);
-          }
-        });
-
-        
-      </script>
+      <script th:src="@{/js/profile.js}"></script>
       
       <div id="passwordModal" class="fixed inset-0 bg-black/40 hidden items-center justify-center z-50">
         <div class="bg-white rounded-xl p-6 w-full max-w-md shadow-lg">
@@ -429,24 +350,27 @@
               </button>
             </section>
 
-            <!-- NEW PASSWORD -->
-            <section class="relative w-full">
-              <input
-                type="password"
-                name="newPassword"
-                placeholder="New password"
-                class="input input-bordered w-full pr-10"
-                id="newPasswordInput"
-                required
-              />
-              <button type="button"
-                onclick="togglePasswordField('newPasswordInput','newEyeIcon','newEyeOffIcon')"
-                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
-                
-                <th:block th:replace="~{fragments/icons :: eye('h-5 w-5', 'newEyeIcon')}"></th:block>
-                <th:block th:replace="~{fragments/icons :: eyeOff('h-5 w-5 hidden', 'newEyeOffIcon')}"></th:block>
-              </button>
-            </section>
+                <!-- NEW PASSWORD -->
+                <section class="relative w-full">
+                  <input
+                    type="password"
+                    name="newPassword"
+                    placeholder="New password"
+                    class="input input-bordered w-full pr-10"
+                    id="newPasswordInput"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onclick="togglePasswordField('newPasswordInput','newEyeIcon','newEyeOffIcon')"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
+                  >
+                    <th:block th:replace="~{fragments/icons :: eye('h-5 w-5', 'newEyeIcon')}"></th:block>
+                    <th:block
+                      th:replace="~{fragments/icons :: eyeOff('h-5 w-5 hidden', 'newEyeOffIcon')}"
+                    ></th:block>
+                  </button>
+                </section>
 
             <!-- REPEAT PASSWORD -->
             <section class="relative w-full">
@@ -487,5 +411,22 @@
           </form>
         </div>
       </div>
+      <script th:inline="javascript">
+        document.addEventListener("DOMContentLoaded", function () {
+          const hasPasswordError = /*[[${passwordError != null}]]*/ false;
+          const hasDeleteError = /*[[${deleteError != null}]]*/ false;
+          const hasPhoneSuccess = /*[[${phoneSuccess != null}]]*/ false;
+          const hasNameSuccess = /*[[${nameSuccess != null}]]*/ false;
+          const hasPasswordSuccess = /*[[${passwordSuccess != null}]]*/ false;
+      
+          initProfile(
+            hasPasswordError,
+            hasDeleteError,
+            hasPhoneSuccess,
+            hasNameSuccess,
+            hasPasswordSuccess
+          );
+        });
+      </script>
     </body>
   </html>
