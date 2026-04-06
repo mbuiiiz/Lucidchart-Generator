@@ -3,6 +3,7 @@ package com.group16.aetherxmlbridge.controller;
 import com.group16.aetherxmlbridge.model.AppUser;
 import com.group16.aetherxmlbridge.model.ZohoProject;
 import com.group16.aetherxmlbridge.repository.AppUserRepository;
+import com.group16.aetherxmlbridge.service.PhoneMaskingService;
 import com.group16.aetherxmlbridge.service.ZohoApiService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,18 +21,26 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import static org.mockito.ArgumentMatchers.any;
+
 class PageControllerTest {
 
     private MockMvc mockMvc;
     private AppUserRepository appUserRepository;
     private ZohoApiService zohoApiService;
+    private PhoneMaskingService phoneMaskingService;
 
     @BeforeEach
     void setUp() {
         appUserRepository = mock(AppUserRepository.class);
         zohoApiService = mock(ZohoApiService.class);
+        phoneMaskingService = mock(PhoneMaskingService.class);
 
-        PageController controller = new PageController(appUserRepository, zohoApiService);
+        PageController controller = new PageController(
+                appUserRepository,
+                zohoApiService,
+                phoneMaskingService
+            );
 
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
         viewResolver.setPrefix("/templates/");
@@ -99,11 +108,13 @@ class PageControllerTest {
                 .build();
 
         when(appUserRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
+        when(phoneMaskingService.mask(any())).thenReturn("*** *** 1234");
 
         mockMvc.perform(get("/profile").principal(new UsernamePasswordAuthenticationToken("test@example.com", "N/A")))
                 .andExpect(status().isOk())
                 .andExpect(view().name("profile"))
-                .andExpect(model().attribute("currentUser", user));
+                .andExpect(model().attribute("currentUser", user))
+                .andExpect(model().attribute("maskedPhoneNumber", "*** *** 1234"));
     }
 
     @Test
@@ -116,6 +127,7 @@ class PageControllerTest {
                 .build();
 
         when(appUserRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
+        when(phoneMaskingService.mask(any())).thenReturn("*** *** 1234");
 
         mockMvc.perform(get("/profile")
                 .param("passwordSuccess", "true")
