@@ -1,8 +1,4 @@
-<p align="center">
-  <a href="#" target="_blank" rel="noopener noreferrer">
-    <img src="aetherxmlbridge/src/main/resources/static/images/landing.png" alt="Lucidchart Generator App Screenshot" width="1100" />
-  </a>
-</p>
+
 
 <h1 align="center">Lucidchart Generator</h1>
 
