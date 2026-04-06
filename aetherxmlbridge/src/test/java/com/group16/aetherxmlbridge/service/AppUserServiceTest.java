@@ -122,34 +122,54 @@ class AppUserServiceTest {
     // -------------------------------------------------------------------------
 
     @Test
-    void updatePhoneNumber_existingUser_savesPhoneNumber() {
+    void updatePhoneNumber_validInternationalFormat_normalizesAndSaves() {
         AppUser user = buildUser("user@example.com", "ROLE_USER");
         when(appUserRepository.findByEmail("user@example.com")).thenReturn(Optional.of(user));
         when(appUserRepository.save(any(AppUser.class))).thenAnswer(i -> i.getArgument(0));
 
-        appUserService.updatePhoneNumber("user@example.com", "555-1234");
+        // Dashes are stripped during normalization, leaving +12345678901
+        appUserService.updatePhoneNumber("user@example.com", "+1-234-567-8901");
 
-        assertThat(user.getPhoneNumber()).isEqualTo("555-1234");
+        assertThat(user.getPhoneNumber()).isEqualTo("+12345678901");
         verify(appUserRepository).save(user);
     }
 
     @Test
-    void updatePhoneNumber_nullPhone_savesNull() {
+    void updatePhoneNumber_nullPhone_throwsIllegalArgumentException() {
         AppUser user = buildUser("user@example.com", "ROLE_USER");
-        user.setPhoneNumber("old-number");
         when(appUserRepository.findByEmail("user@example.com")).thenReturn(Optional.of(user));
-        when(appUserRepository.save(any(AppUser.class))).thenAnswer(i -> i.getArgument(0));
 
-        appUserService.updatePhoneNumber("user@example.com", null);
+        assertThatThrownBy(() -> appUserService.updatePhoneNumber("user@example.com", null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Phone number is required");
+    }
 
-        assertThat(user.getPhoneNumber()).isNull();
+    @Test
+    void updatePhoneNumber_blankPhone_throwsIllegalArgumentException() {
+        AppUser user = buildUser("user@example.com", "ROLE_USER");
+        when(appUserRepository.findByEmail("user@example.com")).thenReturn(Optional.of(user));
+
+        assertThatThrownBy(() -> appUserService.updatePhoneNumber("user@example.com", "   "))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Phone number is required");
+    }
+
+    @Test
+    void updatePhoneNumber_invalidFormat_throwsIllegalArgumentException() {
+        AppUser user = buildUser("user@example.com", "ROLE_USER");
+        when(appUserRepository.findByEmail("user@example.com")).thenReturn(Optional.of(user));
+
+        // Missing leading + so it won't match ^\\+[0-9]{11,15}$
+        assertThatThrownBy(() -> appUserService.updatePhoneNumber("user@example.com", "12345678901"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Invalid phone number format");
     }
 
     @Test
     void updatePhoneNumber_unknownEmail_throwsUsernameNotFoundException() {
         when(appUserRepository.findByEmail("ghost@example.com")).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> appUserService.updatePhoneNumber("ghost@example.com", "555-9999"))
+        assertThatThrownBy(() -> appUserService.updatePhoneNumber("ghost@example.com", "+12345678901"))
                 .isInstanceOf(UsernameNotFoundException.class);
     }
 

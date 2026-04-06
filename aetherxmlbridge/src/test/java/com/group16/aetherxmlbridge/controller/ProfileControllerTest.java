@@ -46,7 +46,7 @@ class ProfileControllerTest {
                 .param("fullName", "New Name")
                 .principal(() -> "user@example.com"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/profile"));
+                .andExpect(redirectedUrl("/profile?nameSuccess=1"));
 
         verify(appUserService).updateFullName("user@example.com", "New Name");
     }
@@ -58,7 +58,7 @@ class ProfileControllerTest {
                 .param("fullName", "   ")
                 .principal(() -> "user@example.com"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/profile"));
+                .andExpect(redirectedUrl("/profile?nameSuccess=1"));
 
         verify(appUserService, never()).updateFullName(anyString(), anyString());
     }
@@ -69,7 +69,7 @@ class ProfileControllerTest {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("fullName", "New Name"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/profile"));
+                .andExpect(redirectedUrl("/profile?nameSuccess=1"));
 
         verify(appUserService, never()).updateFullName(anyString(), anyString());
     }
@@ -80,7 +80,8 @@ class ProfileControllerTest {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("fullName", "  Padded Name  ")
                 .principal(() -> "user@example.com"))
-                .andExpect(status().is3xxRedirection());
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/profile?nameSuccess=1"));
 
         verify(appUserService).updateFullName("user@example.com", "Padded Name");
     }
@@ -93,19 +94,19 @@ class ProfileControllerTest {
     void updatePhone_validPhone_callsServiceAndRedirects() throws Exception {
         mockMvc.perform(post("/profile/update-phone")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("phoneNumber", "555-1234")
+                .param("phoneNumber", "+12345678901")
                 .principal(() -> "user@example.com"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/profile"));
+                .andExpect(redirectedUrl("/profile?phoneSuccess=1"));
 
-        verify(appUserService).updatePhoneNumber("user@example.com", "555-1234");
+        verify(appUserService).updatePhoneNumber("user@example.com", "+12345678901");
     }
 
     @Test
     void updatePhone_nullPrincipal_skipsServiceAndRedirects() throws Exception {
         mockMvc.perform(post("/profile/update-phone")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("phoneNumber", "555-1234"))
+                .param("phoneNumber", "+12345678901"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/profile"));
 
@@ -113,15 +114,29 @@ class ProfileControllerTest {
     }
 
     @Test
-    void updatePhone_emptyPhone_callsServiceWithEmptyString() throws Exception {
+    void updatePhone_invalidFormat_redirectsWithPhoneError() throws Exception {
+        doThrow(new IllegalArgumentException("Invalid phone number format"))
+                .when(appUserService).updatePhoneNumber("user@example.com", "not-a-number");
+
+        mockMvc.perform(post("/profile/update-phone")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("phoneNumber", "not-a-number")
+                .principal(() -> "user@example.com"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/profile?phoneError=Invalid+phone+number+format"));
+    }
+
+    @Test
+    void updatePhone_emptyPhone_redirectsWithPhoneError() throws Exception {
+        doThrow(new IllegalArgumentException("Phone number is required"))
+                .when(appUserService).updatePhoneNumber("user@example.com", "");
+
         mockMvc.perform(post("/profile/update-phone")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("phoneNumber", "")
                 .principal(() -> "user@example.com"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/profile"));
-
-        verify(appUserService).updatePhoneNumber("user@example.com", "");
+                .andExpect(redirectedUrl("/profile?phoneError=Phone+number+is+required"));
     }
 
     // -------------------------------------------------------------------------
