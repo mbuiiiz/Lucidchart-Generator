@@ -102,7 +102,7 @@
                         USER
                       </span>
                     </td>
-                    <td th:text="${user.createdAt}" class="text-gray-500">2026-03-08T00:00:00Z</td>
+                    <td th:text="${#temporals.format(user.createdAt, 'dd.MM.yyyy hh:mm a')}" class="text-gray-500"></td>
                   </tr>
                 </tbody>
               </table>
