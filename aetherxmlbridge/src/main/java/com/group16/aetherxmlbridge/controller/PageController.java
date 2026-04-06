@@ -127,11 +127,15 @@ public PageController(
         AppUser user = appUserRepository.findByEmail(email).orElse(null);
         model.addAttribute("currentUser", user);
       
-        if (user != null) {
+        if (user != null && user.getPhoneNumber() != null) {
           model.addAttribute("maskedPhoneNumber",
               phoneMaskingService.mask(user.getPhoneNumber()));
-        }
+      
+          model.addAttribute("formattedPhoneNumber",
+              phoneMaskingService.format(user.getPhoneNumber()));
       }
+      }
+      
     }
   
     if (passwordError != null) {

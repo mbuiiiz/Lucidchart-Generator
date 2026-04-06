@@ -101,42 +101,49 @@ class PageControllerTest {
     @Test
     void profile_loadsCurrentUser() throws Exception {
         AppUser user = AppUser.builder()
-                .email("test@example.com")
-                .fullName("Test User")
-                .passwordHash("hashed")
-                .role("ROLE_USER")
-                .build();
+            .email("test@example.com")
+            .fullName("Test User")
+            .passwordHash("hashed")
+            .role("ROLE_USER")
+            .phoneNumber("+14343143242")
+            .build();
 
-        when(appUserRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
-        when(phoneMaskingService.mask(any())).thenReturn("*** *** 1234");
+    when(appUserRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
+    when(phoneMaskingService.mask(any())).thenReturn("*** *** 1234");
+    when(phoneMaskingService.format(any())).thenReturn("+1 (434) 314-3242");
 
-        mockMvc.perform(get("/profile").principal(new UsernamePasswordAuthenticationToken("test@example.com", "N/A")))
-                .andExpect(status().isOk())
-                .andExpect(view().name("profile"))
-                .andExpect(model().attribute("currentUser", user))
-                .andExpect(model().attribute("maskedPhoneNumber", "*** *** 1234"));
-    }
+    mockMvc.perform(get("/profile").principal(new UsernamePasswordAuthenticationToken("test@example.com", "N/A")))
+            .andExpect(status().isOk())
+            .andExpect(view().name("profile"))
+            .andExpect(model().attribute("currentUser", user))
+            .andExpect(model().attribute("maskedPhoneNumber", "*** *** 1234"))
+            .andExpect(model().attribute("formattedPhoneNumber", "+1 (434) 314-3242"));
+}
 
     @Test
     void profile_passwordSuccessParam_setsSuccessMessage() throws Exception {
         AppUser user = AppUser.builder()
-                .email("test@example.com")
-                .fullName("Test User")
-                .passwordHash("hashed")
-                .role("ROLE_USER")
-                .build();
+            .email("test@example.com")
+            .fullName("Test User")
+            .passwordHash("hashed")
+            .role("ROLE_USER")
+            .phoneNumber("+14343143242")
+            .build();
 
-        when(appUserRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
-        when(phoneMaskingService.mask(any())).thenReturn("*** *** 1234");
+    when(appUserRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
+    when(phoneMaskingService.mask(any())).thenReturn("*** *** 1234");
+    when(phoneMaskingService.format(any())).thenReturn("+1 (434) 314-3242");
 
-        mockMvc.perform(get("/profile")
-                .param("passwordSuccess", "true")
-                .principal(new UsernamePasswordAuthenticationToken("test@example.com", "N/A")))
-                .andExpect(status().isOk())
-                .andExpect(view().name("profile"))
-                .andExpect(model().attribute("currentUser", user))
-                .andExpect(model().attribute("passwordSuccess", "Password updated successfully"));
-    }
+    mockMvc.perform(get("/profile")
+            .param("passwordSuccess", "true")
+            .principal(new UsernamePasswordAuthenticationToken("test@example.com", "N/A")))
+            .andExpect(status().isOk())
+            .andExpect(view().name("profile"))
+            .andExpect(model().attribute("currentUser", user))
+            .andExpect(model().attribute("maskedPhoneNumber", "*** *** 1234"))
+            .andExpect(model().attribute("formattedPhoneNumber", "+1 (434) 314-3242"))
+            .andExpect(model().attribute("passwordSuccess", "Password updated successfully"));
+}
 
     @Test
     void projects_userWithZohoToken_loadsProjectsAndFlagsConnected() throws Exception {

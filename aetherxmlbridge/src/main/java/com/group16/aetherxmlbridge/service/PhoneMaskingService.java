@@ -60,4 +60,21 @@ public class PhoneMaskingService {
         String lastFour = localDigits.substring(localDigits.length() - 4);
         return countryCode + " (***) ***-" + lastFour;
     }
+
+    public String format(String phone) {
+        if (phone == null || phone.length() < 2) return phone;
+    
+        // +1XXXXXXXXXX
+        String country = phone.substring(0, 2); // +1
+        String digits = phone.substring(2);
+    
+        if (digits.length() != 10) return phone;
+    
+        return String.format("%s (%s) %s-%s",
+                country,
+                digits.substring(0, 3),
+                digits.substring(3, 6),
+                digits.substring(6)
+        );
+    }
 }

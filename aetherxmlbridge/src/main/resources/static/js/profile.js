@@ -184,3 +184,23 @@ function initProfile(hasPasswordError, hasDeleteError, hasPhoneSuccess, hasNameS
 
   initPhoneInput()
 }
+
+function togglePhoneView() {
+  const phoneText = document.getElementById('phoneViewText')
+  const eye = document.getElementById('viewPhoneEye')
+  const eyeOff = document.getElementById('viewPhoneEyeOff')
+
+  if (!phoneText) return
+
+  const isMasked = phoneText.textContent === phoneText.dataset.masked
+
+  if (isMasked) {
+    phoneText.textContent = phoneText.dataset.full
+    eye.classList.add('hidden')
+    eyeOff.classList.remove('hidden')
+  } else {
+    phoneText.textContent = phoneText.dataset.masked
+    eye.classList.remove('hidden')
+    eyeOff.classList.add('hidden')
+  }
+}
