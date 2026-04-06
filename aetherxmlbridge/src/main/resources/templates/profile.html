@@ -1,131 +1,20 @@
 <!doctype html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  th:replace="~{fragments/base-layout :: layout(~{::title}, ~{::content})}"
+>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&amp;display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" th:href="@{/css/dashboard.css}"/>
-
     <title>My Profile - AetherGen</title>
   </head>
 
-  <body class="dot-bg min-h-screen">
-    <div class="flex min-h-screen">
-      <!-- Sidebar -->
-      <aside class="w-64 bg-white border-r border-gray-100 flex flex-col">
-        <!-- Logo -->
-        <section class="p-6 border-b border-gray-100">
-          <section class="flex items-center gap-2.5">
-            <figure
-              class="w-8 h-8 bg-gray-900 rounded-md flex items-center justify-center text-white font-bold text-sm select-none"
-            >
-              <th:block th:replace="~{fragments/icons :: brandGlobe('size-6')}"></th:block>
-            </figure>
-              <span class="text-xl font-semibold text-gray-900">
-                <span class="font-bold">Aether</span><span class="font-normal text-gray-500">Gen</span>
-              </span>
-            </section>
-          </section>
-  
-          <!-- Navigation -->
-          <nav class="flex-1 p-4">
-            <ul class="space-y-2">
-              <li>
-                <a
-                  th:href="@{/dashboard}"
-                  class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-500 hover:bg-gray-50 hover:text-gray-900 transition-colors"
-                >
-                  <th:block th:replace="~{fragments/icons :: home('size-5')}"></th:block>
-                  Dashboard
-                </a>
-              </li>
-  
-              <li>
-                <a
-                  href="#"
-                  class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-500 hover:bg-gray-50 hover:text-gray-900 transition-colors"
-                >
-                  <th:block th:replace="~{fragments/icons :: folder('size-5')}"></th:block>
-                  Projects
-                </a>
-              </li>
-  
-              <li>
-                <a
-                  href="#"
-                  class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-500 hover:bg-gray-50 hover:text-gray-900 transition-colors"
-                >
-                  <th:block th:replace="~{fragments/icons :: document('size-5')}"></th:block>
-                  Generated Diagrams
-                </a>
-              </li>
-            </ul>
-          </nav>
-  
-          <!-- User Section & Logout -->
-          <section class="p-4 border-t border-gray-100">
+  <body>
+    <th:block th:fragment="content">
+      <!-- Page Header -->
+      <th:block
+        th:replace="~{fragments/page-header :: header('My Profile', 'View your account details and manage your profile settings.', false)}"
+      ></th:block>
 
-            <!-- Clickable User Block -->
-            <a th:href="@{/profile}"
-               class="flex items-center gap-3 px-4 py-3 mb-2 rounded-lg hover:bg-gray-50 transition cursor-pointer">
-          
-               <figure class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                <span class="text-sm font-semibold text-gray-600"
-                      th:text="${currentUser.fullName != null and !#strings.isEmpty(currentUser.fullName) ? #strings.substring(currentUser.fullName,0,1) : 'U'}">
-                  U
-                </span>
-              </figure>
-          
-              <div class="flex-1">
-                <p class="text-sm font-semibold text-gray-900"
-                   th:text="${currentUser.fullName}">
-                  User Name
-                </p>
-          
-                <p class="text-xs text-gray-500"
-                   th:text="${currentUser.email}">
-                  user@email.com
-                </p>
-              </div>
-          
-            </a>
-          
-            <!-- Logout -->
-            <form th:action="@{/logout}" method="post">
-              <button
-                class="w-full btn btn-sm bg-gray-900 hover:bg-gray-700 text-white border-none rounded-lg font-medium shadow-sm flex items-center justify-center gap-2"
-                type="submit"
-              >
-                <th:block th:replace="~{fragments/icons :: logout('size-4')}"></th:block>
-                Logout
-              </button>
-            </form>
-          
-          </section>
-        </aside>
-  
-        <!-- Main Content -->
-        <main class="flex-1 overflow-auto">
-          <header class="bg-white/80 backdrop-blur-md sticky top-0 z-40 border-b border-gray-100">
-            <div class="px-8 py-3">
-              <h1 class="text-2xl font-bold text-gray-900">My Profile</h1>
-              <p class="text-sm text-gray-500 mt-1">
-                View your account details and manage your profile settings.
-              </p>
-            </div>
-          </header>
-  
-          <div class="p-8">
+      <div class="p-8">
             <div class="max-w-4xl mx-auto space-y-6">
   
               <section class="bg-white border border-gray-100 rounded-xl p-6 shadow-sm">
@@ -432,8 +321,6 @@
   
             </div>
           </div>
-        </main>
-      </div>
 
       <script th:src="@{/js/profile.js}"></script>
       
@@ -463,24 +350,27 @@
               </button>
             </section>
 
-            <!-- NEW PASSWORD -->
-            <section class="relative w-full">
-              <input
-                type="password"
-                name="newPassword"
-                placeholder="New password"
-                class="input input-bordered w-full pr-10"
-                id="newPasswordInput"
-                required
-              />
-              <button type="button"
-                onclick="togglePasswordField('newPasswordInput','newEyeIcon','newEyeOffIcon')"
-                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
-                
-                <th:block th:replace="~{fragments/icons :: eye('h-5 w-5', 'newEyeIcon')}"></th:block>
-                <th:block th:replace="~{fragments/icons :: eyeOff('h-5 w-5 hidden', 'newEyeOffIcon')}"></th:block>
-              </button>
-            </section>
+                <!-- NEW PASSWORD -->
+                <section class="relative w-full">
+                  <input
+                    type="password"
+                    name="newPassword"
+                    placeholder="New password"
+                    class="input input-bordered w-full pr-10"
+                    id="newPasswordInput"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onclick="togglePasswordField('newPasswordInput','newEyeIcon','newEyeOffIcon')"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
+                  >
+                    <th:block th:replace="~{fragments/icons :: eye('h-5 w-5', 'newEyeIcon')}"></th:block>
+                    <th:block
+                      th:replace="~{fragments/icons :: eyeOff('h-5 w-5 hidden', 'newEyeOffIcon')}"
+                    ></th:block>
+                  </button>
+                </section>
 
             <!-- REPEAT PASSWORD -->
             <section class="relative w-full">

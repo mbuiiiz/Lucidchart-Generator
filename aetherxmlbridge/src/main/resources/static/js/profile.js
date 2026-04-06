@@ -16,6 +16,22 @@ function togglePasswordField(inputId, eyeId, eyeOffId) {
   }
 }
 
+function togglePassword(inputId, eyeIconId, eyeOffIconId) {
+  const input = document.getElementById(inputId)
+  const eyeIcon = document.getElementById(eyeIconId)
+  const eyeOffIcon = document.getElementById(eyeOffIconId)
+
+  if (input.type === 'password') {
+    input.type = 'text'
+    eyeIcon.classList.add('hidden')
+    eyeOffIcon.classList.remove('hidden')
+  } else {
+    input.type = 'password'
+    eyeIcon.classList.remove('hidden')
+    eyeOffIcon.classList.add('hidden')
+  }
+}
+
 function toggleEdit(button, isEditing) {
   const container = button.closest('.editable-card')
   if (!container) return

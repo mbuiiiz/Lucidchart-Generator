@@ -39,11 +39,13 @@ CRITICAL RULES FOR BREAKING DOWN WORKFLOWS:
      → "Get Expense Details" → "Loop Through Line Items" → "Search for Related Invoice" → "Create Invoice Line"
    - Each API call, database query, or logical operation = separate action node
 
-2. LOOPS - When iterating over items, explicitly show:
-   - "Loop Through Each Item" as an action
-   - "More Items?" as a condition (diamond) after the loop body
-   - The Yes path goes back to process next item
-   - The No path continues to the next step
+2. LOOPS - Use type=Loop when the automation processes multiple records individually (e.g. searching returns a list and each item needs separate processing). Do NOT add a loop just for a single bulk retrieval where no per-item processing happens. type=Loop marks the END of one iteration (advance to next item), NOT the beginning:
+   - First: list ALL actions executed on each item (type=Get, Search, Create, Update, etc.)
+   - Last in loop body: one action with type=Loop (e.g. "Advance to Next Item", "Process Next Record")
+   - The system automatically inserts "More Items?" condition after every Loop action
+   - CORRECT order: [body actions] → Loop action → (system injects More Items? here) → [post-loop actions]
+   - WRONG order: Loop action → [body actions]  ← this puts body actions outside the loop
+   Example: "Get Policy Details" → "Merge Policy Data" → "Loop / Next Policy" → (More Items? injected)
 
 3. SEARCH/LOOKUP PATTERNS - Always follow with a condition:
    - Action: "Search for Invoice in Zoho Books"
@@ -64,6 +66,23 @@ CRITICAL RULES FOR BREAKING DOWN WORKFLOWS:
 6. INFER MISSING LOGIC - If a description implies steps, make them explicit:
    - "Update related records" implies: Search → Found? → Update
    - "Process all items" implies: Get Items → Loop → Process → More? → Continue
+
+7. FIELD-LEVEL DETAIL in action descriptions - be as specific as possible:
+   - Instead of "Create invoice line item" → "Create Invoice Line Item (Qty=1, Rate=Line Item.Amount, Project=ZohoProjectID)"
+   - Instead of "Update deal" → "Update Deal Stage to Closed Won"
+   - Reference exact field names when mapping data: "from Expense.Amount", "from CRM Opportunity.AccountID"
+   - If the scope mentions specific fields or values, include them verbatim in the description
+
+8. SEQUENCE must be executable top-to-bottom:
+   - Conditions must immediately follow the action they check - never group them at the end
+   - Every Search action needs a condition checking existence right after
+   - Every Loop action needs loop body actions then a condition checking if more items remain
+
+MANDATORY CONDITION RULES - these are not optional:
+- Every action with type "Search" MUST be immediately followed by a condition (e.g., "Found?", "Exists?")
+- Every action with type "Loop" MUST have a condition at the end of its body (e.g., "More Items?", "More Records?")
+- The conditions array MUST NEVER be empty if the actions array contains any Search or Loop type actions
+- Violating these rules produces an invalid flowchart
 
 EXAMPLE - Complex Expense Reimbursement Flow:
 
@@ -109,11 +128,6 @@ Output:
       "type": "Get"
     },
     {
-      "name": "Loop Through Items",
-      "description": "Loop Through Each Line Item on the expense",
-      "type": "Loop"
-    },
-    {
       "name": "Search Opportunity",
       "description": "Search for the Opportunity in CRM related to the Project",
       "type": "Search"
@@ -130,13 +144,18 @@ Output:
     },
     {
       "name": "Add Invoice Line",
-      "description": "Add Line Item to Invoice (Qty=1, Rate=Line Item Amount)",
+      "description": "Add Line Item to Invoice (Qty=1, Rate=Line Item.Amount, Project=ZohoProjectID)",
       "type": "Create"
     },
     {
       "name": "Attach Receipt",
       "description": "Attach file from Expense Line Item to Invoice",
       "type": "Attach"
+    },
+    {
+      "name": "Next Line Item",
+      "description": "Advance to the next Line Item in the loop",
+      "type": "Loop"
     }
   ],
   "summary": "When an expense is approved, loop through rebillable line items, find or create a draft invoice, and add line items with receipts."

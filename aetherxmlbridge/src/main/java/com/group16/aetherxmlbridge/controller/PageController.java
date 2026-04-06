@@ -83,6 +83,7 @@ public PageController(
       }
     }
 
+    model.addAttribute("activePage", "dashboard");
     return "dashboard";
   }
 
@@ -149,6 +150,7 @@ public PageController(
       model.addAttribute("deleteError", "Incorrect password");
     }
   
+    model.addAttribute("activePage", "profile");
     return "profile";
   }
 
@@ -203,6 +205,7 @@ public PageController(
         model.addAttribute("projects", projects);
       }
     }
+    model.addAttribute("activePage", "projects");
     return "projects";
   }
 
@@ -237,6 +240,7 @@ public PageController(
         }
       }
     }
+    model.addAttribute("activePage", "automation-scope");
     return "automation-scope";
   }
 
