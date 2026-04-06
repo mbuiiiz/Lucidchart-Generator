@@ -178,7 +178,7 @@
                             <button
                               type="button"
                               onclick="toggleEdit(this, false)"
-                              class="text-sm font-medium text-gray-500"
+                              class="text-sm font-medium text-gray-500 hover:text-gray-900"
                             >
                               Cancel
                             </button>
@@ -237,10 +237,27 @@
                           th:text="'Not set'">
                        </p>
                        
-                       <p class="font-medium text-gray-900"
-                          th:unless="${currentUser.phoneNumber == null}"
-                          th:text="${maskedPhoneNumber}">
-                       </p>
+                       <div th:unless="${currentUser.phoneNumber == null}" class="flex items-center gap-2">
+
+                        <!-- Phone text -->
+                        <p id="phoneViewText"
+                           class="font-medium text-gray-900"
+                           th:data-masked="${maskedPhoneNumber}"
+                           th:data-full="${formattedPhoneNumber}"
+                           th:text="${maskedPhoneNumber}">
+                        </p>
+                      
+                        <!-- Eye button -->
+                        <button
+                          type="button"
+                          onclick="togglePhoneView()"
+                          class="text-gray-400 hover:text-gray-700"
+                        >
+                          <th:block th:replace="~{fragments/icons :: eye('h-4 w-4', 'viewPhoneEye')}"></th:block>
+                          <th:block th:replace="~{fragments/icons :: eyeOff('h-4 w-4 hidden', 'viewPhoneEyeOff')}"></th:block>
+                        </button>
+                      
+                      </div>
                        <p
                         th:if="${phoneSuccess}"
                         id="phoneSuccessMessage"
@@ -257,7 +274,7 @@
                             <button
                               type="button"
                               onclick="toggleEdit(this, false)"
-                              class="text-sm font-medium text-gray-500"
+                              cclass="text-sm font-medium text-gray-500 hover:text-gray-900"
                             >
                               Cancel
                             </button>
@@ -419,16 +436,6 @@
       </div>
 
       <script th:src="@{/js/profile.js}"></script>
-      <script th:inline="javascript">
-        document.addEventListener("DOMContentLoaded", function () {
-          const hasPasswordError = /*[[${passwordError != null}]]*/ false;
-          const hasDeleteError = /*[[${deleteError != null}]]*/ false;
-          const hasPhoneSuccess = /*[[${phoneSuccess != null}]]*/ false;
-          const hasNameSuccess = /*[[${nameSuccess != null}]]*/ false;
-
-          initProfile(hasPasswordError, hasDeleteError, hasPhoneSuccess, hasNameSuccess);
-        });
-      </script>
       
       <div id="passwordModal" class="fixed inset-0 bg-black/40 hidden items-center justify-center z-50">
         <div class="bg-white rounded-xl p-6 w-full max-w-md shadow-lg">
