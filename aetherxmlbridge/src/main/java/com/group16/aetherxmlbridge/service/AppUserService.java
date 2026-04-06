@@ -68,8 +68,18 @@ public class AppUserService implements UserDetailsService {
     public void updatePhoneNumber(String email, String phoneNumber) {
         AppUser user = appUserRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
-
-        user.setPhoneNumber(phoneNumber);
+    
+        if (phoneNumber == null || phoneNumber.isBlank()) {
+            throw new IllegalArgumentException("Phone number is required");
+        }
+    
+        String normalized = phoneNumber.replaceAll("[^0-9+]", "");
+    
+        if (!normalized.matches("^\\+[0-9]{11,15}$")) {
+            throw new IllegalArgumentException("Invalid phone number format");
+        }
+    
+        user.setPhoneNumber(normalized);
         appUserRepository.save(user);
     }
 

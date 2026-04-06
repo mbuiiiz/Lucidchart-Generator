@@ -17,6 +17,8 @@ import com.group16.aetherxmlbridge.service.ZohoApiService;
 
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.group16.aetherxmlbridge.service.PhoneMaskingService;
+
 /**
  * This file is for returning thymeleaf templates to the user when accessing a certain
  * path, do not put auth & data processing endpoints in here please
@@ -25,11 +27,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class PageController {
   private final AppUserRepository appUserRepository;
   private final ZohoApiService zohoApiService;
+  private final PhoneMaskingService phoneMaskingService;
 
-  public PageController(AppUserRepository appUserRepository, ZohoApiService zohoApiService) {
-    this.appUserRepository = appUserRepository;
-    this.zohoApiService = zohoApiService;
-  }
+public PageController(
+    AppUserRepository appUserRepository,
+    ZohoApiService zohoApiService,
+    PhoneMaskingService phoneMaskingService
+) {
+  this.appUserRepository = appUserRepository;
+  this.zohoApiService = zohoApiService;
+  this.phoneMaskingService = phoneMaskingService;
+}
   
   @GetMapping("/")
   public String getLanding(){
@@ -75,18 +83,34 @@ public class PageController {
       }
     }
 
+    model.addAttribute("activePage", "dashboard");
     return "dashboard";
   }
 
-    @GetMapping("/profile")
-    public String getProfilePage(
-      Model model,
-      Principal principal,
-      @RequestParam(value = "passwordError", required = false) String passwordError,
-      @RequestParam(value = "passwordSuccess", required = false) String passwordSuccess,
-      @RequestParam(value = "deleteError", required = false) String deleteError
-  ) {
-  
+      @GetMapping("/profile")
+      public String getProfilePage(
+          Model model,
+          Principal principal,
+          @RequestParam(value = "passwordError", required = false) String passwordError,
+          @RequestParam(value = "passwordSuccess", required = false) String passwordSuccess,
+          @RequestParam(value = "deleteError", required = false) String deleteError,
+          @RequestParam(value = "phoneError", required = false) String phoneError,
+          @RequestParam(value = "phoneSuccess", required = false) String phoneSuccess,
+          @RequestParam(value = "nameSuccess", required = false) String nameSuccess
+      ) {
+
+      if (nameSuccess != null) {
+        model.addAttribute("nameSuccess", true);
+      }  
+
+      if (phoneError != null) {
+        model.addAttribute("phoneError", phoneError);
+    }
+    
+    if (phoneSuccess != null) {
+        model.addAttribute("phoneSuccess", "Phone number updated successfully");
+    }
+
     if (principal != null) {
       String email;
       if (principal instanceof OAuth2AuthenticationToken oauthToken) {
@@ -102,6 +126,11 @@ public class PageController {
       if (email != null) {
         AppUser user = appUserRepository.findByEmail(email).orElse(null);
         model.addAttribute("currentUser", user);
+      
+        if (user != null) {
+          model.addAttribute("maskedPhoneNumber",
+              phoneMaskingService.mask(user.getPhoneNumber()));
+        }
       }
     }
   
@@ -117,6 +146,7 @@ public class PageController {
       model.addAttribute("deleteError", "Incorrect password");
     }
   
+    model.addAttribute("activePage", "profile");
     return "profile";
   }
 
@@ -171,6 +201,7 @@ public class PageController {
         model.addAttribute("projects", projects);
       }
     }
+    model.addAttribute("activePage", "projects");
     return "projects";
   }
 
@@ -205,6 +236,7 @@ public class PageController {
         }
       }
     }
+    model.addAttribute("activePage", "automation-scope");
     return "automation-scope";
   }
 

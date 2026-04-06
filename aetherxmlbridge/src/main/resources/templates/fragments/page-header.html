@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <body>
+    <!-- Page Header Fragment -->
+    <header
+      th:fragment="header (title, subtitle, adminButton)"
+      class="bg-white/80 backdrop-blur-md sticky top-0 z-40 border-b border-gray-100"
+    >
+      <div class="px-8 py-3 flex items-center justify-between">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900" th:text="${title}">Page Title</h1>
+          <p class="text-sm text-gray-500 mt-1" th:text="${subtitle}">Page subtitle</p>
+        </div>
+
+        <!-- ADMIN BUTTON (optional) -->
+        <div
+          th:if="${adminButton != null and adminButton and currentUser != null and currentUser.role == 'ROLE_ADMIN'}"
+        >
+          <a
+            th:href="@{/admin/users}"
+            class="btn bg-gray-900 hover:bg-gray-700 text-white border-none rounded-lg font-medium px-5"
+          >
+            Manage Users
+          </a>
+        </div>
+      </div>
+    </header>
+  </body>
+</html>

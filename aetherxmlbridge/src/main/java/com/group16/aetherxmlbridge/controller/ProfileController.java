@@ -27,14 +27,20 @@ public class ProfileController {
         if (principal != null && fullName != null && !fullName.trim().isEmpty()) {
             appUserService.updateFullName(principal.getName(), fullName.trim());
         }
-        return "redirect:/profile";
+        return "redirect:/profile?nameSuccess=1";
     }
 
     @PostMapping("/profile/update-phone")
     public String updatePhone(@RequestParam("phoneNumber") String phoneNumber, Principal principal) {
-        if (principal != null) {
-            appUserService.updatePhoneNumber(principal.getName(), phoneNumber == null ? null : phoneNumber.trim());
+        try {
+            if (principal != null) {
+                appUserService.updatePhoneNumber(principal.getName(), phoneNumber);
+                return "redirect:/profile?phoneSuccess=1";
+            }
+        } catch (IllegalArgumentException e) {
+            return "redirect:/profile?phoneError=" + e.getMessage().replace(" ", "+");
         }
+    
         return "redirect:/profile";
     }
 
