@@ -24,6 +24,7 @@ public class AdminController {
             model.addAttribute("currentUser", currentUser);
         }
 
+        model.addAttribute("activePage", "admin-users");
         return "admin-users";
     }
 }
