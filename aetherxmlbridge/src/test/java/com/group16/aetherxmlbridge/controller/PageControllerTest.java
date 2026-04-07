@@ -2,6 +2,7 @@ package com.group16.aetherxmlbridge.controller;
 
 import com.group16.aetherxmlbridge.model.AppUser;
 import com.group16.aetherxmlbridge.model.ZohoProject;
+import com.group16.aetherxmlbridge.model.ZohoScopeData;
 import com.group16.aetherxmlbridge.repository.AppUserRepository;
 import com.group16.aetherxmlbridge.service.PhoneMaskingService;
 import com.group16.aetherxmlbridge.service.ZohoApiService;
@@ -15,13 +16,12 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import static org.mockito.ArgumentMatchers.any;
 
 class PageControllerTest {
 
@@ -40,7 +40,7 @@ class PageControllerTest {
                 appUserRepository,
                 zohoApiService,
                 phoneMaskingService
-            );
+        );
 
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
         viewResolver.setPrefix("/templates/");
@@ -101,49 +101,49 @@ class PageControllerTest {
     @Test
     void profile_loadsCurrentUser() throws Exception {
         AppUser user = AppUser.builder()
-            .email("test@example.com")
-            .fullName("Test User")
-            .passwordHash("hashed")
-            .role("ROLE_USER")
-            .phoneNumber("+14343143242")
-            .build();
+                .email("test@example.com")
+                .fullName("Test User")
+                .passwordHash("hashed")
+                .role("ROLE_USER")
+                .phoneNumber("+14343143242")
+                .build();
 
-    when(appUserRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
-    when(phoneMaskingService.mask(any())).thenReturn("*** *** 1234");
-    when(phoneMaskingService.format(any())).thenReturn("+1 (434) 314-3242");
+        when(appUserRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
+        when(phoneMaskingService.mask(any())).thenReturn("*** *** 1234");
+        when(phoneMaskingService.format(any())).thenReturn("+1 (434) 314-3242");
 
-    mockMvc.perform(get("/profile").principal(new UsernamePasswordAuthenticationToken("test@example.com", "N/A")))
-            .andExpect(status().isOk())
-            .andExpect(view().name("profile"))
-            .andExpect(model().attribute("currentUser", user))
-            .andExpect(model().attribute("maskedPhoneNumber", "*** *** 1234"))
-            .andExpect(model().attribute("formattedPhoneNumber", "+1 (434) 314-3242"));
-}
+        mockMvc.perform(get("/profile").principal(new UsernamePasswordAuthenticationToken("test@example.com", "N/A")))
+                .andExpect(status().isOk())
+                .andExpect(view().name("profile"))
+                .andExpect(model().attribute("currentUser", user))
+                .andExpect(model().attribute("maskedPhoneNumber", "*** *** 1234"))
+                .andExpect(model().attribute("formattedPhoneNumber", "+1 (434) 314-3242"));
+    }
 
     @Test
     void profile_passwordSuccessParam_setsSuccessMessage() throws Exception {
         AppUser user = AppUser.builder()
-            .email("test@example.com")
-            .fullName("Test User")
-            .passwordHash("hashed")
-            .role("ROLE_USER")
-            .phoneNumber("+14343143242")
-            .build();
+                .email("test@example.com")
+                .fullName("Test User")
+                .passwordHash("hashed")
+                .role("ROLE_USER")
+                .phoneNumber("+14343143242")
+                .build();
 
-    when(appUserRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
-    when(phoneMaskingService.mask(any())).thenReturn("*** *** 1234");
-    when(phoneMaskingService.format(any())).thenReturn("+1 (434) 314-3242");
+        when(appUserRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
+        when(phoneMaskingService.mask(any())).thenReturn("*** *** 1234");
+        when(phoneMaskingService.format(any())).thenReturn("+1 (434) 314-3242");
 
-    mockMvc.perform(get("/profile")
-            .param("passwordSuccess", "true")
-            .principal(new UsernamePasswordAuthenticationToken("test@example.com", "N/A")))
-            .andExpect(status().isOk())
-            .andExpect(view().name("profile"))
-            .andExpect(model().attribute("currentUser", user))
-            .andExpect(model().attribute("maskedPhoneNumber", "*** *** 1234"))
-            .andExpect(model().attribute("formattedPhoneNumber", "+1 (434) 314-3242"))
-            .andExpect(model().attribute("passwordSuccess", "Password updated successfully"));
-}
+        mockMvc.perform(get("/profile")
+                        .param("passwordSuccess", "true")
+                        .principal(new UsernamePasswordAuthenticationToken("test@example.com", "N/A")))
+                .andExpect(status().isOk())
+                .andExpect(view().name("profile"))
+                .andExpect(model().attribute("currentUser", user))
+                .andExpect(model().attribute("maskedPhoneNumber", "*** *** 1234"))
+                .andExpect(model().attribute("formattedPhoneNumber", "+1 (434) 314-3242"))
+                .andExpect(model().attribute("passwordSuccess", "Password updated successfully"));
+    }
 
     @Test
     void projects_userWithZohoToken_loadsProjectsAndFlagsConnected() throws Exception {
@@ -169,5 +169,64 @@ class PageControllerTest {
                 .andExpect(model().attribute("currentUser", user))
                 .andExpect(model().attribute("zohoConnected", true))
                 .andExpect(model().attribute("projects", List.of(project)));
+    }
+
+    @Test
+    void automationScope_userWithZohoToken_loadsScopeDataAndFlagsConnected() throws Exception {
+        AppUser user = AppUser.builder()
+                .email("test@example.com")
+                .fullName("Test User")
+                .passwordHash("hashed")
+                .role("ROLE_USER")
+                .zohoAccessToken("token123")
+                .build();
+
+        ZohoScopeData scope = new ZohoScopeData();
+        scope.setId("scope-1");
+
+        when(appUserRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
+        when(zohoApiService.fetchScopeData(user, null)).thenReturn(List.of(scope));
+
+        mockMvc.perform(get("/automation-scope")
+                        .principal(new UsernamePasswordAuthenticationToken("test@example.com", "N/A")))
+                .andExpect(status().isOk())
+                .andExpect(view().name("automation-scope"))
+                .andExpect(model().attribute("currentUser", user))
+                .andExpect(model().attribute("zohoConnected", true))
+                .andExpect(model().attribute("scopeData", List.of(scope)))
+                .andExpect(model().attribute("activePage", "automation-scope"));
+    }
+
+    @Test
+    void automationScope_userWithoutZohoToken_setsZohoConnectedFalse() throws Exception {
+        AppUser user = AppUser.builder()
+                .email("test@example.com")
+                .fullName("Test User")
+                .passwordHash("hashed")
+                .role("ROLE_USER")
+                .zohoAccessToken(null)
+                .build();
+
+        when(appUserRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
+
+        mockMvc.perform(get("/automation-scope")
+                        .principal(new UsernamePasswordAuthenticationToken("test@example.com", "N/A")))
+                .andExpect(status().isOk())
+                .andExpect(view().name("automation-scope"))
+                .andExpect(model().attribute("currentUser", user))
+                .andExpect(model().attribute("zohoConnected", false))
+                .andExpect(model().attributeDoesNotExist("scopeData"))
+                .andExpect(model().attribute("activePage", "automation-scope"));
+    }
+
+    @Test
+    void automationScope_withoutPrincipal_loadsPageWithActivePageOnly() throws Exception {
+        mockMvc.perform(get("/automation-scope"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("automation-scope"))
+                .andExpect(model().attribute("activePage", "automation-scope"))
+                .andExpect(model().attributeDoesNotExist("currentUser"))
+                .andExpect(model().attributeDoesNotExist("zohoConnected"))
+                .andExpect(model().attributeDoesNotExist("scopeData"));
     }
 }
