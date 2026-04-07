@@ -59,7 +59,8 @@ public class AutomationDiagramController {
     @PostMapping(value = "/generate-automation-diagram", produces = MediaType.APPLICATION_XML_VALUE)
     public ResponseEntity<String> generateAutomationDiagram(
             Principal principal,
-            @RequestParam String scopeId
+            @RequestParam String scopeId,
+            @RequestParam(defaultValue = "") String customPrompt
     ) {
         try {
             AppUser user = getCurrentUser(principal);
@@ -83,7 +84,7 @@ public class AutomationDiagramController {
                 return errorResponse("Scope record not found with ID: " + scopeId);
             }
 
-            String prompt = buildPrompt(targetScope);
+            String prompt = buildPrompt(targetScope, customPrompt);
 
             // Call AI to analyze and structure the automation
             String aiResponse = chatClient.prompt()
@@ -128,10 +129,10 @@ public class AutomationDiagramController {
         return appUserRepository.findByEmail(email).orElse(null);
     }
 
-    private String buildPrompt(ZohoScopeData scope) {
+    private String buildPrompt(ZohoScopeData scope, String customPrompt) {
         StringBuilder prompt = new StringBuilder();
         prompt.append("Analyze this automation scope and extract the workflow components:\n\n");
-        
+
         if (scope.getProductDescription() != null && !scope.getProductDescription().isEmpty()) {
             prompt.append("Product: ").append(scope.getProductDescription()).append("\n");
         }
@@ -146,6 +147,12 @@ public class AutomationDiagramController {
         }
         if (scope.getDetailedDescription() != null && !scope.getDetailedDescription().isEmpty()) {
             prompt.append("Details: ").append(scope.getDetailedDescription()).append("\n");
+        }
+
+        if (customPrompt != null && !customPrompt.trim().isEmpty()) {
+            prompt.append("\n");
+            prompt.append("Custom Prompt: ").append(customPrompt.trim()).append("\n");
+            prompt.append("Use this custom prompt to regenerate the same automation diagram in a refined way.\n");
         }
 
         return prompt.toString();
