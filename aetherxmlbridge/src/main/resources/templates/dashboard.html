@@ -125,8 +125,8 @@
                   th:if="${iterStat.index < 10}"
                   class="border border-gray-200 rounded-lg p-4 hover:border-gray-300 hover:shadow-sm transition-all"
                 >
-                  <div class="flex items-center justify-between">
-                    <section class="flex-1">
+                  <div class="flex items-start justify-between gap-4">
+                    <section class="flex-1 min-w-0">
                       <h4 class="font-semibold text-gray-900" th:text="${project.dealName}">
                         Project Name
                       </h4>
@@ -139,6 +139,62 @@
                         >
                       </p>
                     </section>
+
+                    <div class="shrink-0 w-full max-w-md flex flex-col items-end">
+                      <form
+                        th:action="@{/generate-diagram}"
+                        method="post"
+                        class="mb-3"
+                        target="downloadFrame"
+                      >
+                        <input type="hidden" name="projectId" th:value="${project.id}" />
+                        <input type="hidden" name="dealName" th:value="${project.dealName}" />
+                        <input type="hidden" name="stage" th:value="${project.stage}" />
+                        <input type="hidden" name="companyContext" th:value="${project.companyContext}" />
+                        <input type="hidden" name="productPurpose" th:value="${project.productPurpose}" />
+                        <input type="hidden" name="productionNotes" th:value="${project.productionNotes}" />
+                        <input type="hidden" name="customerConcerns" th:value="${project.customerConcerns}" />
+                        <button
+                          type="submit"
+                          th:attr="onclick=|showDashboardRegenerateSection('${project.id}')|"
+                          class="btn btn-sm bg-gray-900 hover:bg-gray-700 text-white border-none rounded-lg font-medium px-4"
+                        >
+                          Generate Diagram
+                        </button>
+                      </form>
+
+                      <div
+                        class="space-y-2 hidden w-full"
+                        th:id="'dashboard-regenerate-section-' + ${project.id}"
+                      >
+                        <form th:action="@{/regenerate-diagram}" method="post" target="downloadFrame" class="space-y-2">
+                          <input type="hidden" name="projectId" th:value="${project.id}" />
+                          <input type="hidden" name="dealName" th:value="${project.dealName}" />
+                          <input type="hidden" name="stage" th:value="${project.stage}" />
+                          <input type="hidden" name="companyContext" th:value="${project.companyContext}" />
+                          <input type="hidden" name="productPurpose" th:value="${project.productPurpose}" />
+                          <input type="hidden" name="productionNotes" th:value="${project.productionNotes}" />
+                          <input type="hidden" name="customerConcerns" th:value="${project.customerConcerns}" />
+
+                          <textarea
+                            name="customPrompt"
+                            rows="3"
+                            class="textarea textarea-bordered w-full text-sm"
+                            placeholder="regenerate this diagram with your own prompt"
+                            required
+                          ></textarea>
+
+                          <div class="flex justify-end">
+                            <button
+                              type="submit"
+                              class="btn btn-sm bg-blue-600 hover:bg-blue-500 text-white border-none rounded-lg font-medium px-4"
+                            >
+                              Regenerate Diagram
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
@@ -164,6 +220,27 @@
             </section>
         </div>
       </div>
+
+      <iframe name="downloadFrame" class="hidden"></iframe>
+
+      <script>
+        function showDashboardRegenerateSection(id)
+        {
+          var allSections = document.querySelectorAll('[id^="dashboard-regenerate-section-"]');
+
+          for (var i = 0; i < allSections.length; i++)
+          {
+            allSections[i].classList.add('hidden');
+          }
+
+          var oneSection = document.getElementById('dashboard-regenerate-section-' + id);
+
+          if (oneSection)
+          {
+            oneSection.classList.remove('hidden');
+          }
+        }
+      </script>
     </th:block>
   </body>
 </html>
