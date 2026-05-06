@@ -71,6 +71,6 @@ export default defineConfig({
     command: 'cd ../aetherxmlbridge && ./mvnw spring-boot:run',
     url: 'http://localhost:8080',
     reuseExistingServer: !process.env.CI,
-    timeout: 180_000,
+    timeout: 300_000,
   },
 });

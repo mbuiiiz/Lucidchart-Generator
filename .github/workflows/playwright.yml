@@ -8,11 +8,24 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    env:
+      SPRING_PROFILES_ACTIVE: oauth
+      GEMINI_API_KEY: dummy
+      GOOGLE_CLIENT_ID: dummy
+      GOOGLE_CLIENT_SECRET: dummy
+      ZOHO_CLIENT_ID: dummy
+      ZOHO_CLIENT_SECRET: dummy
     defaults:
       run:
         working-directory: ./e2e
     steps:
     - uses: actions/checkout@v4
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        cache: 'maven'
     - uses: actions/setup-node@v4
       with:
         node-version: lts/*
